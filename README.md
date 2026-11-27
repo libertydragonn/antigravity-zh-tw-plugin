@@ -20,7 +20,7 @@
 | 選用外掛 | [WhiteBr1ck/agy-powertools](https://github.com/WhiteBr1ck/agy-powertools) **v2.16.12**（MIT），預設不安裝，雙擊「安裝 Powertools.bat」啟用 |
 | 已驗證客戶端 | Antigravity **2.35.1**、**2.35.2**（Windows 實測；macOS / Linux 提供同邏輯指令碼） |
 | 詞典規模 | 7,614 條整句詞條 + 314 條動態正則規則 |
-| 外掛包 | 約 **12 MB**，內建 Windows 免安裝 Python 執行環境；看板使用 Antigravity 內建的 Node，不必另裝 |
+| 外掛包 | 約 **13 MB**，內建 Windows 免安裝 Python 執行環境；看板使用 Antigravity 內建的 Node，不必另裝 |
 | 舊版備份（簡體，上游） | **v1.5.0**（適配 Antigravity 2.32.1）：[原始碼備份分支 `backup/v1.5.0`](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin/tree/backup/v1.5.0) · [Release 下載](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin/releases/tag/v1.5.0) |
 | 許可證 | [MIT](LICENSE)；看板見 [`context-viewer/LICENSE`](context-viewer/LICENSE)、Powertools 見 [`powertools/LICENSE`](powertools/LICENSE)（皆為 MIT） |
 
@@ -47,7 +47,7 @@
 ### 第一步：下載外掛包
 
 開啟 [Releases](https://github.com/libertydragonn/antigravity-zh-tw-plugin/releases/latest)，下載
-**`Antigravity-zh-TW-plugin-v1.9.0.zip`**（約 12 MB）。
+**`Antigravity-zh-TW-plugin-v1.9.0.zip`**（約 13 MB）。
 
 > 下載後可以用同一頁面提供的 `.sha256` 檔案校驗完整性，見[殺軟誤報或下載被攔截](#殺軟誤報或下載被攔截)。
 
