@@ -1,0 +1,12 @@
+{
+  "name": "agy-powertools",
+  "displayName": "Agy Powertools",
+  "version": "2.16.12",
+  "description": "Native UI enhancements, Codex-style stage updates and compact layout, session branching, context telemetry, and usage dashboard for Antigravity 2.0.",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Branch the current session from a previous turn",
+    "Inspect context window usage and cache hit rate",
+    "Show session token speed and execution timeline"
+  ]
+}

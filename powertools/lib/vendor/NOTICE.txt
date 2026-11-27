@@ -1,0 +1,9 @@
+HextaUI DateRangeCalendar interaction adapted from:
+https://github.com/preetsuthar17/hextaui/blob/48accfd4200d5cc914156c38b0a858318228191f/components/ui/date-picker.tsx
+Copyright (c) 2026 Preet Suthar, MIT. See HextaUI-LICENSE.txt.
+
+The calendar uses react-day-picker 10.0.2 and date-fns. Their licenses are
+included here. The bundle uses Antigravity's React instance and native
+popover/menu controls. Rebuild with npm ci && npm run build:calendar.
+
+The rest of HextaUI and its theme are not bundled.

@@ -4,6 +4,7 @@
 > 詞典、介面提示與文件以 OpenCC `s2twp` 轉換，並針對臺灣慣用詞做了修正（例如 Agent → 代理程式、Find → 尋找、權限、帳號、進階、收件匣），轉換工具見 [`tools/s2tw_convert.py`](tools/s2tw_convert.py)。
 > 安裝流程、注入方式與簡體版完全相同，可以直接取代簡體版使用。
 > 另外內建 [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer) 的**對話上下文檢視器與 Token 用量看板**（繁體中文面板），見[下方說明](#對話上下文檢視器與-token-用量看板)。
+> 另附**選用**的 [WhiteBr1ck/agy-powertools](https://github.com/WhiteBr1ck/agy-powertools)（Agy Powertools，繁體中文介面），預設不安裝，見[選用：Agy Powertools](#選用agy-powertools)。
 
 給 **Google Antigravity 桌面客戶端**（Agent Manager）裝上繁體中文介面：下載外掛包 → 解壓 → 雙擊「安裝中文化外掛.bat」。指令碼自動完成備份、注入、啟動自檢，裝完直接就是中文，頂欄同時出現上下文與 Token 用量看板。
 
@@ -13,14 +14,15 @@
 
 | 項目 | 說明 |
 | --- | --- |
-| 當前版本 | **v1.8.0**（繁體中文版，基於上游 v1.7.0） |
+| 當前版本 | **v1.9.0**（繁體中文版，基於上游 v1.7.0） |
 | 上游簡體版 | [yunjuanyunshu114-byte/antigravity-zh-plugin](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin) |
 | 上下文看板 | [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer) **v0.9.3**（MIT），面板預設繁體中文 |
+| 選用外掛 | [WhiteBr1ck/agy-powertools](https://github.com/WhiteBr1ck/agy-powertools) **v2.16.12**（MIT），預設不安裝，雙擊「安裝 Powertools.bat」啟用 |
 | 已驗證客戶端 | Antigravity **2.35.1**、**2.35.2**（Windows 實測；macOS / Linux 提供同邏輯指令碼） |
 | 詞典規模 | 7,614 條整句詞條 + 314 條動態正則規則 |
 | 外掛包 | 約 **12 MB**，內建 Windows 免安裝 Python 執行環境；看板使用 Antigravity 內建的 Node，不必另裝 |
 | 舊版備份（簡體，上游） | **v1.5.0**（適配 Antigravity 2.32.1）：[原始碼備份分支 `backup/v1.5.0`](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin/tree/backup/v1.5.0) · [Release 下載](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin/releases/tag/v1.5.0) |
-| 許可證 | [MIT](LICENSE)；看板見 [`context-viewer/LICENSE`](context-viewer/LICENSE)（MIT） |
+| 許可證 | [MIT](LICENSE)；看板見 [`context-viewer/LICENSE`](context-viewer/LICENSE)、Powertools 見 [`powertools/LICENSE`](powertools/LICENSE)（皆為 MIT） |
 
 ---
 
@@ -28,6 +30,7 @@
 
 - [三步快速開始](#三步快速開始)
 - [對話上下文檢視器與 Token 用量看板](#對話上下文檢視器與-token-用量看板)
+- [選用：Agy Powertools](#選用agy-powertools)
 - [客戶端更新後怎麼辦](#客戶端更新後怎麼辦)
 - [命令與參數](#命令與參數)
 - [工作原理](#工作原理)
@@ -44,13 +47,13 @@
 ### 第一步：下載外掛包
 
 開啟 [Releases](https://github.com/libertydragonn/antigravity-zh-tw-plugin/releases/latest)，下載
-**`Antigravity-zh-TW-plugin-v1.8.0.zip`**（約 12 MB）。
+**`Antigravity-zh-TW-plugin-v1.9.0.zip`**（約 12 MB）。
 
 > 下載後可以用同一頁面提供的 `.sha256` 檔案校驗完整性，見[殺軟誤報或下載被攔截](#殺軟誤報或下載被攔截)。
 
 ### 第二步：解壓
 
-把 zip 解壓到任意位置（例如 `D:\Tools\`），得到資料夾 **`Antigravity中文化外掛-v1.8.0`**。
+把 zip 解壓到任意位置（例如 `D:\Tools\`），得到資料夾 **`Antigravity中文化外掛-v1.9.0`**。
 
 外掛包已內建 Python 執行環境，**不需要 git、不需要命令列、不需要自己裝 Python**。
 
@@ -88,6 +91,20 @@ macOS / Linux 解壓後執行 `./install-macos.sh`（安裝）、`./launch-macos
 - **連線對象**：看板讀取本機對話紀錄計算用量。依程式碼中的網址，它會連線到 Google 官方 API（`cloudcode-pa.googleapis.com`，使用 Antigravity 現有的登入狀態查詢模型額度）、`models.dev` 與 GitHub（取得模型價格表、檢查看板更新）；本機 API 只監聽 `127.0.0.1`。
 - **進階選項預設關閉**：看板設定頁裡的客戶端漢化（簡體）、免 TUN 本地代理、系統提示詞檔位、上下文長度解鎖、多帳號自動切換等功能來自上游，預設全部關閉。「上下文長度解鎖」會修改 Antigravity 的 language server，「提示詞檔位」會改寫系統提示詞，開啟前請先看上游說明，風險自負。**看板自己的「客戶端漢化」請保持關閉**，以免和本外掛的繁體翻譯互相覆蓋。
 - **與上游的差異**：看板以按鈕標籤定位部分介面，上游只認英文與簡體，本外掛補上繁體標籤（傳送、麥克風、自訂、開啟 IDE 等）；未附上游未簽章的 `cli-window-helper.exe`，從看板啟動 CLI 時會改用一般命令提示字元視窗。詳見 [`context-viewer/UPSTREAM.md`](context-viewer/UPSTREAM.md)。
+
+---
+
+## 選用：Agy Powertools
+
+外掛包另附 [WhiteBr1ck/agy-powertools](https://github.com/WhiteBr1ck/agy-powertools) v2.16.12（MIT）的正式發布包，**預設不安裝**。它是 Antigravity 的原生外掛，提供緊湊排版與階段回報、會話分支與原位編輯訊息、全文搜尋歷史對話、輸入框旁的上下文 / 速度統計、左側邊欄「Powertools」用量與請求看板、檔案右鍵選單等功能（完整說明見[上游 README](https://github.com/WhiteBr1ck/agy-powertools/blob/main/docs/README_ZH_TW.md)）。
+
+- **安裝**：雙擊 **`安裝 Powertools.bat`**。會安裝到 `~/.gemini/config/plugins/agy-powertools/`，第一次安裝時把它的介面語言設為繁體中文，然後重新啟動 Antigravity，左側邊欄出現「Powertools」。
+- **移除**：雙擊 **`移除 Powertools.bat`**。會先把它的設定另存到 `%USERPROFILE%\.antigravity-zh\powertools-settings.json`（Antigravity 會在外掛移除後清掉外掛資料），重新安裝時自動還原；捷徑也會還原。
+- **會改動什麼**：Powertools 不改 `app.asar`，而是透過**本機除錯連接埠**掛載介面——它會在 Antigravity 的桌面與開始功能表捷徑加上 `--remote-debugging-port=0`，本外掛的「中文化並啟動.bat」、開機自動修復與冒煙測試在已安裝 Powertools 時也會帶上這個參數。連接埠只監聽 `127.0.0.1`，但開著時本機任何程式都能連上並操控 Antigravity，介意的話請不要安裝。
+- **與上下文看板重疊**：兩者都有上下文圓環、生成速度與用量看板。只想留一套時，可雙擊「移除上下文看板.bat」（中文化保留）或「移除 Powertools.bat」。
+- **與中文化並存**：Powertools 自帶介面翻譯，與本外掛的繁體翻譯同時運作；實測 Powertools 的介面增強與自我檢查都正常。
+- **進階功能預設關閉**：多帳號切換（含額度耗盡自動切號）、免 TUN 代理、實驗性上下文目標等都在 Powertools 設定裡，預設關閉，開啟前請先看上游說明，風險自負。
+- **更新**：可在 Powertools → 設定 → 關於 中檢查更新；之後再雙擊「安裝 Powertools.bat」時，若已安裝的版本比外掛包內的新，會保留較新的版本。
 
 ---
 
@@ -137,7 +154,7 @@ Antigravity 自動更新時，官方 `app.asar` 會覆蓋中文化補丁——�
 `python install.py <參數>`；外掛包內可用自帶的 `runtime\python.exe`：
 
 ```bat
-cd /d "C:\Users\<你>\Downloads\Antigravity中文化外掛-v1.8.0"
+cd /d "C:\Users\<你>\Downloads\Antigravity中文化外掛-v1.9.0"
 runtime\python.exe install.py --status
 ```
 
@@ -156,6 +173,8 @@ runtime\python.exe install.py --status
 | `--install-viewer` | 安裝中文化並加裝上下文看板，之後保持開啟 | 「安裝上下文看板.bat」內部使用 |
 | `--remove-viewer` | 移除看板：還原官方原版後只重新安裝中文化，之後不再安裝看板 | 「移除上下文看板.bat」內部使用 |
 | `--no-viewer` | 本次安裝不含看板（不改變記住的選擇） | 排查相容性問題 |
+| `--install-powertools` | 安裝選用的 Agy Powertools（捷徑加上本機除錯連接埠，重新啟動客戶端） | 「安裝 Powertools.bat」內部使用 |
+| `--remove-powertools` | 解除安裝 Powertools（先備份其設定），還原捷徑 | 「移除 Powertools.bat」內部使用 |
 | `--asar PATH` | 手動指定 `app.asar` 路徑 | 客戶端裝在非預設位置 |
 | `--version` | 列印安裝器版本 | 確認外掛包版本 |
 
@@ -226,7 +245,7 @@ try {
   "dict_sha256": "…",
   "injected_sha256": "…",
   "injected_at": "2026-11-25 09:30:00",
-  "toolkit_version": "1.8.0"
+  "toolkit_version": "1.9.0"
 }
 ```
 
@@ -285,7 +304,7 @@ v1.5.0 起安裝器自帶冒煙自檢：如果注入後客戶端起不來，會�
 - **下載被瀏覽器/SmartScreen 攔截**：選擇「保留」，或用 Release 頁面提供的 `.sha256` 校驗檔案：
 
   ```bat
-  certutil -hashfile "C:\Users\<你>\Downloads\Antigravity-zh-TW-plugin-v1.8.0.zip" SHA256
+  certutil -hashfile "C:\Users\<你>\Downloads\Antigravity-zh-TW-plugin-v1.9.0.zip" SHA256
   ```
 
   與 `.sha256` 檔案裡的值一致即可放心。
@@ -377,6 +396,12 @@ A：`sudo xattr -rd com.apple.quarantine /Applications/Antigravity.app`；安裝
 
 ## 更新日誌
 
+### v1.9.0 繁體中文版（2026-11-27）
+
+- **選用整合 Agy Powertools**：附上 [WhiteBr1ck/agy-powertools](https://github.com/WhiteBr1ck/agy-powertools) v2.16.12（MIT）正式發布包，預設不安裝；新增「安裝 Powertools.bat」/「移除 Powertools.bat」，第一次安裝把介面語言設為繁體中文
+- **安裝器**：新增 `--install-powertools` / `--remove-powertools`；已安裝 Powertools 時，中文化並啟動、開機自動修復與冒煙測試都以 `--remote-debugging-port=0` 啟動客戶端；移除前備份 Powertools 設定、重新安裝時還原；已安裝較新版本時不會被外掛包降版
+- **實測**：Windows / Antigravity 2.35.2 安裝、移除、重新安裝 Powertools，捷徑與外掛設定都正確寫入與還原；Powertools 自我檢查正常，與繁體翻譯、上下文看板同時運作
+
 ### v1.8.0 繁體中文版（2026-11-27）
 
 - **內建對話上下文檢視器與 Token 用量看板**：整合 [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer) v0.9.3（MIT），安裝中文化時一起寫入，面板預設繁體中文；可用「移除上下文看板.bat」/「安裝上下文看板.bat」切換
@@ -462,7 +487,7 @@ python install.py --asar "D:\Portable\Antigravity\resources\app.asar"   :: 手�
 外掛包結構（解壓即用）：
 
 ```text
-Antigravity中文化外掛-v1.8.0/
+Antigravity中文化外掛-v1.9.0/
 ├── 安裝中文化外掛.bat          ← 雙擊這個
 ├── 還原官方原版.bat
 ├── 中文化並啟動.bat            ← 客戶端更新後雙擊這個
@@ -471,10 +496,13 @@ Antigravity中文化外掛-v1.8.0/
 ├── 取消開機自動修復.bat
 ├── 安裝上下文看板.bat          ← 加裝對話上下文 / Token 用量看板
 ├── 移除上下文看板.bat
+├── 安裝 Powertools.bat         ← 選用：Agy Powertools
+├── 移除 Powertools.bat
 ├── install-macos.sh / launch-macos.sh / restore-macos.sh
 ├── 使用說明.txt
 ├── install.py / asar.py
 ├── context-viewer/            ← 上下文看板（elviscjn-cjn/antigravity-context-viewer v0.9.3）
+├── powertools/                ← 選用外掛（WhiteBr1ck/agy-powertools v2.16.12）
 ├── dicts/
 ├── docs/
 ├── tools/
@@ -493,6 +521,8 @@ antigravity-zh-tw-plugin/
 ├── 取消開機自動修復.bat        # 取消開機自動修復
 ├── 安裝上下文看板.bat          # 加裝對話上下文檢視器與 Token 用量看板
 ├── 移除上下文看板.bat          # 移除看板（保留中文化）
+├── 安裝 Powertools.bat         # 選用：安裝 Agy Powertools
+├── 移除 Powertools.bat         # 選用：移除 Agy Powertools
 ├── install-macos.sh          # macOS / Linux 一鍵安裝
 ├── launch-macos.sh           # macOS / Linux 中文化並啟動（更新後恢復）
 ├── restore-macos.sh          # macOS / Linux 一鍵還原
@@ -501,6 +531,7 @@ antigravity-zh-tw-plugin/
 ├── VERSION                   # 版本號
 ├── 使用說明.txt
 ├── context-viewer/            # 上下文看板（上游 v0.9.3 執行檔案 + 繁體相容修補，勿手動修改）
+├── powertools/                # 選用外掛 Agy Powertools（上游 v2.16.12 正式發布包原樣，勿手動修改）
 ├── dicts/
 │   ├── zh_tw.json            # 整句詞典（繁體中文）
 │   └── engine.js             # DOM 翻譯引擎模板（含動態規則）
@@ -510,7 +541,9 @@ antigravity-zh-tw-plugin/
 ├── tools/
 │   ├── s2tw_convert.py       # 簡體版 → 繁體版轉換工具
 │   ├── vendor_context_viewer.py  # 從上游看板更新 context-viewer/ 並套用繁體相容修補
-│   └── viewer_panel_lang.js  # 安裝時把看板面板語言設為繁體中文（不覆蓋使用者的選擇）
+│   ├── viewer_panel_lang.js  # 安裝時把看板面板語言設為繁體中文（不覆蓋使用者的選擇）
+│   ├── vendor_powertools.py  # 從上游 Release zip 更新 powertools/
+│   └── powertools_lang.mjs   # 第一次安裝 Powertools 時把語言設為繁體中文
 ├── runtime/                  # Windows 免安裝 Python 執行環境（不進 Git，Release 包內建）
 ├── README.md
 └── LICENSE                   # MIT
@@ -530,11 +563,18 @@ python tools\s2tw_convert.py "Antigravity汉化插件-vX.Y.Z" "Antigravity中文
 ### 跟進上游看板更新
 
 ```bat
-git clone https://github.com/elviscjn-cjn/antigravity-context-viewer.git ..ntigravity-context-viewer
-python toolsendor_context_viewer.py ..ntigravity-context-viewer
+git clone https://github.com/elviscjn-cjn/antigravity-context-viewer.git ..\antigravity-context-viewer
+python tools\vendor_context_viewer.py ..\antigravity-context-viewer
 ```
 
 指令碼會依上游發布清單複製執行檔案到 `context-viewer/`，並套用繁體相容修補；任一修補比對次數不符就中止（代表上游程式碼已變動，需要重新檢查定位標籤）。
+
+### 跟進上游 Powertools 更新
+
+```bat
+gh release download vX.Y.Z --repo WhiteBr1ck/agy-powertools --pattern "agy-powertools-vX.Y.Z.zip"
+python tools\vendor_powertools.py agy-powertools-vX.Y.Z.zip
+```
 
 ---
 
@@ -542,9 +582,10 @@ python toolsendor_context_viewer.py ..ntigravity-context-viewer
 
 本專案與 Google 及 Antigravity 官方團隊無關，不包含 Antigravity 任何二進位內容。
 內建的上下文看板來自 [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer)（MIT，作者 ELVISCHEN 與貢獻者，授權與第三方聲明見 `context-viewer/LICENSE`、`context-viewer/THIRD_PARTY_NOTICES.md`）。
+選用的 Agy Powertools 來自 [WhiteBr1ck/agy-powertools](https://github.com/WhiteBr1ck/agy-powertools)（MIT，授權見 `powertools/LICENSE`、`powertools/lib/vendor/NOTICE.txt`）。
 修改 `app.asar` 可能違反官方服務條款，請自行評估使用風險。
 
 ## License
 
-[MIT](LICENSE)；`context-viewer/` 依其 [MIT 授權](context-viewer/LICENSE)。
+[MIT](LICENSE)；`context-viewer/` 依其 [MIT 授權](context-viewer/LICENSE)，`powertools/` 依其 [MIT 授權](powertools/LICENSE)。
 

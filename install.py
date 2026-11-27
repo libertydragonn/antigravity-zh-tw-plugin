@@ -42,7 +42,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import asar  # noqa: E402
 
-TOOLKIT_VERSION = "1.8.0"
+TOOLKIT_VERSION = "1.9.0"
 TAG = "Antigravity Chinese Translation Injection v5-appendonly"
 DICT_PLACEHOLDER = "__DICT_ITEMS__"
 ENGINE_START_MARKER = "(function() {\n  const dictionary = {"
@@ -76,6 +76,18 @@ VIEWER_CLI = os.path.join(VIEWER_DIR, "cli.js")
 VIEWER_LANG_JS = os.path.join(HERE, "tools", "viewer_panel_lang.js")
 VIEWER_ASAR_MARK = "dist/meter-main.js"  # 看板注入後 asar 內才會出現的檔案
 NODE_MIN_VERSION = (22, 4)
+
+# Agy Powertools（WhiteBr1ck/agy-powertools，MIT）：選用的 Antigravity 原生外掛，預設不安裝
+POWERTOOLS_DIR = os.path.join(HERE, "powertools")
+POWERTOOLS_LANG_JS = os.path.join(HERE, "tools", "powertools_lang.mjs")
+POWERTOOLS_HOME = os.path.join(os.path.expanduser("~"), ".gemini", "config", "plugins", "agy-powertools")
+POWERTOOLS_RECEIPT = os.path.join(POWERTOOLS_HOME, ".agy-install.json")
+POWERTOOLS_SETTINGS = os.path.join(os.path.expanduser("~"), ".gemini", "antigravity", "plugin_data",
+                                   "agy-powertools", "settings.json")
+# Antigravity 會在外掛移除後清掉它的 plugin_data，所以移除前另存一份，重新安裝時還原
+POWERTOOLS_SETTINGS_BACKUP = os.path.join(USER_DIR, "powertools-settings.json")
+POWERTOOLS_NODE_MIN = (22, 13)
+DEBUG_PORT_FLAG = "--remote-debugging-port=0"  # Powertools 透過本機除錯連接埠掛載介面
 LOG_DIR = os.path.join(USER_DIR, "logs")
 TASK_NAME = "AntigravityZhAutoRepair"
 APP_EXE_NAMES = ["Antigravity.exe"]
@@ -326,7 +338,11 @@ def start_app(exe):
         flags = 0
         if sys.platform == "win32":
             flags = 0x00000008 | 0x00000200  # DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP
-        subprocess.Popen([exe], env=env, close_fds=True, creationflags=flags,
+        cmd = [exe]
+        if powertools_installed_version():
+            # 已安裝 Powertools：和它改過的捷徑一樣帶上除錯連接埠參數，介面增強才會掛上
+            cmd.append(DEBUG_PORT_FLAG)
+        subprocess.Popen(cmd, env=env, close_fds=True, creationflags=flags,
                          stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return True
     except Exception as e:
@@ -1183,8 +1199,8 @@ def _node_version(cmd, env):
         return "", ()
 
 
-def find_node_runtime(exe):
-    """找 Node.js 22.4+：優先系統 node，其次用 Antigravity 內建的 Electron（ELECTRON_RUN_AS_NODE）。"""
+def find_node_runtime(exe, min_version=NODE_MIN_VERSION):
+    """找符合最低版本的 Node.js：優先系統 node，其次用 Antigravity 內建的 Electron（ELECTRON_RUN_AS_NODE）。"""
     base_env = os.environ.copy()
     base_env.pop("ELECTRON_RUN_AS_NODE", None)
     candidates = []
@@ -1200,7 +1216,7 @@ def find_node_runtime(exe):
         candidates.append(([electron], env, "Antigravity 內建 Node"))
     for cmd, env, label in candidates:
         v, parts = _node_version(cmd, env)
-        if parts and parts >= NODE_MIN_VERSION:
+        if parts and parts >= min_version:
             return cmd, env, "%s %s" % (label, v)
     return None
 
@@ -1252,6 +1268,122 @@ def install_viewer(asar_path, exe):
     except Exception as e:
         say("[!] 看板面板語言設定未完成（可在看板內自行切換）: %s" % e)
     return True
+
+
+# ---------------------------------------------------------------- Agy Powertools（選用）
+def _version_tuple(v):
+    try:
+        return tuple(int(x) for x in str(v).strip().lstrip("v").split(".")[:3])
+    except Exception:
+        return ()
+
+
+def powertools_bundled_version():
+    try:
+        with open(os.path.join(POWERTOOLS_DIR, "package.json"), "r", encoding="utf-8") as f:
+            return json.load(f).get("version") or ""
+    except Exception:
+        return ""
+
+
+def powertools_installed_version():
+    try:
+        with open(POWERTOOLS_RECEIPT, "r", encoding="utf-8") as f:
+            return json.load(f).get("version") or ""
+    except Exception:
+        return ""
+
+
+def _restart_client(exe):
+    """關閉並重新開啟客戶端，讓 Powertools 的除錯連接埠參數生效 / 失效。"""
+    if not exe:
+        return
+    if is_app_running(exe):
+        say("[*] 重新啟動 Antigravity ...")
+        if not kill_app(exe=exe):
+            say("[!] 無法關閉 Antigravity，請手動完全退出後重新開啟。")
+            return
+    if start_app(exe):
+        say("[OK] 已啟動 Antigravity%s。" % ("（帶除錯連接埠，Powertools 介面增強會掛上）"
+                                       if powertools_installed_version() else ""))
+
+
+def cmd_install_powertools(args):
+    bundled = powertools_bundled_version()
+    if not bundled or not os.path.isfile(os.path.join(POWERTOOLS_DIR, "scripts", "install.mjs")):
+        die("外掛包內沒有 powertools 資料夾，無法安裝 Agy Powertools。")
+    _, resources_dir = detect_paths(args.asar)
+    exe = app_exe_path(resources_dir)
+    rt = find_node_runtime(exe, POWERTOOLS_NODE_MIN)
+    if not rt:
+        die("找不到 Node.js 22.13 以上的執行環境（系統 Node 或 Antigravity 內建 Node），無法安裝 Powertools。")
+    cmd, env, label = rt
+    installed = powertools_installed_version()
+    if installed and _version_tuple(installed) > _version_tuple(bundled):
+        say("[i] 已安裝較新的 Powertools v%s（外掛包內為 v%s），保留現有版本。" % (installed, bundled))
+    else:
+        say("[*] 安裝 Agy Powertools v%s（%s）..." % (bundled, label))
+        code, out = _run_logged(cmd + [os.path.join(POWERTOOLS_DIR, "scripts", "install.mjs")],
+                                env, POWERTOOLS_DIR, 600)
+        if code != 0 or powertools_installed_version() != bundled:
+            for line in out.splitlines()[-8:]:
+                say("    " + line)
+            die("Powertools 安裝失敗（代碼 %d）。中文化與上下文看板不受影響。" % code, 2)
+        say("[OK] Powertools v%s 已安裝到 %s" % (bundled, POWERTOOLS_HOME))
+    if not os.path.exists(POWERTOOLS_SETTINGS) and os.path.isfile(POWERTOOLS_SETTINGS_BACKUP):
+        try:
+            os.makedirs(os.path.dirname(POWERTOOLS_SETTINGS), exist_ok=True)
+            shutil.copy2(POWERTOOLS_SETTINGS_BACKUP, POWERTOOLS_SETTINGS)
+            say("[OK] 已還原上次移除前的 Powertools 設定")
+        except Exception as e:
+            say("[!] 還原 Powertools 設定失敗（改用預設）: %s" % e)
+    try:
+        code, out = _run_logged(cmd + [POWERTOOLS_LANG_JS, "zh-TW"], env, HERE, 120)
+        last = out.strip().splitlines()[-1] if out.strip() else ""
+        if last.startswith("set:"):
+            say("[OK] Powertools 介面語言設為繁體中文")
+        elif last == "kept":
+            say("[i] 保留 Powertools 現有設定（語言可在 Powertools → 設定 中切換）")
+        else:
+            say("[!] Powertools 語言設定未完成（可在 Powertools → 設定 中切換）: %s" % last)
+    except Exception as e:
+        say("[!] Powertools 語言設定未完成（可在 Powertools → 設定 中切換）: %s" % e)
+    save_prefs(powertools=True)
+    _restart_client(exe)
+    say("")
+    say("[DONE] Agy Powertools 已啟用：左側邊欄會出現「Powertools」。")
+    say("[i] Antigravity 的捷徑已加上 %s，從捷徑開啟時介面增強會自動掛上。" % DEBUG_PORT_FLAG)
+    return 0
+
+
+def cmd_remove_powertools(args):
+    _, resources_dir = detect_paths(args.asar)
+    exe = app_exe_path(resources_dir)
+    save_prefs(powertools=False)
+    if not powertools_installed_version():
+        say("[OK] 目前沒有安裝 Agy Powertools。")
+        return 0
+    rt = find_node_runtime(exe, POWERTOOLS_NODE_MIN)
+    if not rt:
+        die("找不到 Node.js 22.13 以上的執行環境，無法執行 Powertools 解除安裝程式。")
+    cmd, env, label = rt
+    if os.path.isfile(POWERTOOLS_SETTINGS):
+        try:
+            os.makedirs(USER_DIR, exist_ok=True)
+            shutil.copy2(POWERTOOLS_SETTINGS, POWERTOOLS_SETTINGS_BACKUP)
+            say("[OK] 已備份 Powertools 設定（重新安裝時會還原）：%s" % POWERTOOLS_SETTINGS_BACKUP)
+        except Exception as e:
+            say("[!] 備份 Powertools 設定失敗: %s" % e)
+    say("[*] 解除安裝 Agy Powertools ...")
+    code, out = _run_logged(cmd + [os.path.join(POWERTOOLS_DIR, "scripts", "uninstall.mjs"), "--keep-settings"],
+                            env, POWERTOOLS_DIR, 600)
+    if code != 0 or powertools_installed_version():
+        for line in out.splitlines()[-8:]:
+            say("    " + line)
+        die("Powertools 解除安裝失敗（代碼 %d）。" % code, 2)
+    say("[OK] Powertools 已移除，Antigravity 捷徑已還原（不再帶除錯連接埠）。")
+    _restart_client(exe)
+    return 0
 
 
 def has_installed_app(resources_dir):
@@ -1626,6 +1758,11 @@ def cmd_status(args):
                                         "開啟" if pref_on else "關閉"))
         rt = find_node_runtime(exe)
         say("看板執行環境: %s" % (rt[2] if rt else "找不到 Node.js 22.4+（看板無法安裝）"))
+    if powertools_bundled_version():
+        inst = powertools_installed_version()
+        say("Agy Powertools: %s（外掛包內 v%s，選用）" % (
+            ("已安裝 v%s，啟動時帶 %s" % (inst, DEBUG_PORT_FLAG)) if inst else "未安裝",
+            powertools_bundled_version()))
     return 0
 
 
@@ -1839,6 +1976,9 @@ def main():
     ap.add_argument("--remove-viewer", action="store_true",
                     help="移除上下文看板，之後只安裝中文化")
     ap.add_argument("--no-viewer", action="store_true", help="本次安裝不含上下文看板（不改變偏好）")
+    ap.add_argument("--install-powertools", action="store_true",
+                    help="安裝選用的 Agy Powertools（Antigravity 原生外掛，啟動時帶除錯連接埠）")
+    ap.add_argument("--remove-powertools", action="store_true", help="解除安裝 Agy Powertools（先備份其設定，重新安裝時還原）")
     ap.add_argument("--asar", default=None, help="手動指定 app.asar 路徑")
     ap.add_argument("--version", action="store_true", help="顯示版本")
     args = ap.parse_args()
@@ -1860,6 +2000,10 @@ def main():
         sys.exit(cmd_install_viewer(args))
     if args.remove_viewer:
         sys.exit(cmd_remove_viewer(args))
+    if args.install_powertools:
+        sys.exit(cmd_install_powertools(args))
+    if args.remove_powertools:
+        sys.exit(cmd_remove_powertools(args))
     if args.auto_silent:
         sys.exit(cmd_auto(args, silent=True))
     if args.auto:

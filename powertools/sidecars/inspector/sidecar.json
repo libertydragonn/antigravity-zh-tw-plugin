@@ -1,0 +1,27 @@
+{
+  "command": "node",
+  "args": [
+    "main.mjs"
+  ],
+  "env": {
+    "AGY_POWERTOOLS_VERSION": "2.16.12",
+    "NODE_USE_ENV_PROXY": "0"
+  },
+  "restart_policy": "always",
+  "display_name": "Powertools",
+  "description": "Native context telemetry, full conversation forks, and turn completion timestamps.",
+  "has_web_ui": true,
+  "agent_permissions": {
+    "allows_user_interactions": false
+  },
+  "ui_config": {
+    "display_name": "Powertools",
+    "views": [
+      {
+        "path": "/",
+        "entrypoint": "SIDECAR_UI_ENTRYPOINT_AUX_PANE",
+        "title": "Powertools"
+      }
+    ]
+  }
+}

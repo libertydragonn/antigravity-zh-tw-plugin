@@ -1,4 +1,4 @@
-Antigravity 繁體中文化外掛 v1.8.0
+Antigravity 繁體中文化外掛 v1.9.0
 ================================
 
 這是給 Google Antigravity 桌面客戶端用的繁體中文（臺灣用語）介面外掛包，
@@ -31,6 +31,15 @@ v1.7.0 的安裝器會「先自檢、再留下」，並自動保護已安裝的�
   - 看板設定頁裡的「客戶端漢化」請保持關閉，以免和本外掛的繁體翻譯互相覆蓋；
     上下文長度解鎖、提示詞檔位、本地代理等進階功能預設關閉，開啟前請先看說明，風險自負。
   - 來源：https://github.com/elviscjn-cjn/antigravity-context-viewer（MIT）
+
+一之二、選用：Agy Powertools（預設不安裝）
+------------------------------------------
+緊湊排版、會話分支與編輯訊息、歷史全文搜尋、左側邊欄「Powertools」用量看板等原生增強。
+  - 安裝：雙擊「安裝 Powertools.bat」（介面語言設為繁體中文，會重新啟動 Antigravity）
+  - 移除：雙擊「移除 Powertools.bat」（設定會先備份，重新安裝時還原）
+  - 注意：它會在 Antigravity 捷徑加上 --remote-debugging-port=0（只監聽 127.0.0.1），
+    開著時本機程式都能連上 Antigravity；和上下文看板功能重疊，可只留其中一套。
+  - 來源：https://github.com/WhiteBr1ck/agy-powertools（MIT）
 
 二、客戶端更新後中文化消失？（這是正常的）
 ----------------------------------------

@@ -1,0 +1,19 @@
+{
+  "agy-powertools-telemetry": {
+    "enabled": false,
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "node ./scripts/telemetry-hook.mjs PreInvocation",
+        "timeout": 5
+      }
+    ],
+    "PostInvocation": [
+      {
+        "type": "command",
+        "command": "node ./scripts/telemetry-hook.mjs PostInvocation",
+        "timeout": 5
+      }
+    ]
+  }
+}

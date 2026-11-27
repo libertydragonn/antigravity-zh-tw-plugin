@@ -1,0 +1,845 @@
+(() => {
+  const pairs = [
+    ['Conversations','会话'],['Conversation','会话'],['New chat','新建聊天'],['Chats','聊天'],['Archived conversations','已归档会话'],['Search projects','搜索项目'],['All projects','全部项目'],
+    ['Prevent Sleep','防止休眠'],['Prevent the computer from sleeping while the app is running.','应用运行时防止电脑休眠。'],['Keep In Menu Bar','在菜单栏中保留'],['Keep the app accessible from the menu bar and running in the background when all windows are closed.','关闭所有窗口后仍在后台运行，可从菜单栏打开。'],['Enable Remote Control','启用远程控制'],['Manage your conversations from the companion website.','从配套网站管理会话。'],['Remote Control','远程控制'],['Work with local agents from another device.','从其他设备使用本机智能体。'],['Device Name','设备名称'],['A label for this computer when you connect from another device. Changing it reconnects.','从其他设备连接时显示的电脑名称，修改后会重新连接。'],['Open in Remote Control','打开远程控制'],['Nickname','昵称'],['Application','应用'],['Environments','环境'],['Subscription','订阅'],['Pay As You Go','按量付费'],['Select your license','选择许可'],['Manage your plan, credentials, and general preferences.','管理套餐、凭据和通用选项。'],['Marketing Emails','营销邮件'],['Email','邮箱'],['Not Signed In','未登录'],['App version','应用版本'],['Advanced Settings','高级设置'],['Execute URLs','允许操作的网址'],['Download files','文件下载'],['Organization Allowed Domains (Read-Only)','组织允许的域名（只读）'],['Browsing History','浏览历史'],['Volume','音量'],['Shortcuts','快捷键'],['Edit Shortcut','编辑快捷键'],['Add Shortcut','添加快捷键'],['Remove Shortcut','移除快捷键'],['Reset to Default','恢复默认'],['Scheduled Tasks','计划任务'],['Open File Search','打开文件搜索'],['Add to Chat/Quote','添加到聊天或引用'],['Open Conversation in New Tab','在新标签页中打开会话'],['Keyboard shortcuts for quick navigation and control.','用于快速导航和操作的键盘快捷键。'],['Allow/deny agent browser actuation access to specific URLs.','允许或禁止智能体操作指定网址。'],['Allow/deny agent browser file downloads from specific sites.','允许或禁止智能体从指定网站下载文件。'],
+    ['Execution','执行'],['Accessibility','无障碍'],['App','应用'],['Models','模型'],['Updater','更新'],['Sound','声音'],['Data','数据'],['Send With Enter','按 Enter 发送'],['Send with Enter','按 Enter 发送'],['Send messages with the keyboard\'s Enter key instead of starting a new line.','按 Enter 发送消息，而不是换行。'],
+    ['Enable Terminal Sandbox','启用终端沙盒'],['Run terminal commands with sandbox restrictions.','在沙盒限制下运行终端命令。'],['Sandbox Allow Network','允许沙盒访问网络'],['Allow sandboxed commands to make network requests.','允许沙盒中的命令发起网络请求。'],['Terminal Command Auto Execution','终端命令自动执行'],['Review Policy','审查策略'],['Enable Sounds for Agent','启用智能体提示音'],['Play a sound when your action is needed or the agent finishes.','需要你操作或任务完成时播放提示音。'],['Enable Notifications for Agent','启用智能体通知'],['Show system notifications when your action is needed or the agent finishes.','需要你操作或任务完成时显示系统通知。'],
+    ['Terminal Placement','终端位置'],['Choose where terminal sessions appear.','选择终端会话的显示位置。'],['Open Links In','链接打开方式'],['Enable Browser Tools','启用浏览器工具'],['Browser Javascript Execution Policy','浏览器 JavaScript 执行策略'],['Controls whether the agent can run custom JavaScript to automate complex browser actions.','控制智能体能否运行自定义 JavaScript 来执行浏览器操作。'],['Automatic Check for Updates','自动检查更新'],['Enable Telemetry','启用遥测'],['Configure the agent\'s visual theme and display preferences.','设置智能体界面的主题和显示选项。'],['Download Location','下载位置'],['Browser Actuation Rules','浏览器操作规则'],['Browser Subagent','浏览器子智能体'],['Configure built-in browser, link opening, and browser subagent preferences.','设置内置浏览器、链接打开方式和浏览器子智能体。'],['Enable AI Credit Overages','允许超额使用 AI 积分'],['Set the volume of agent sounds.','设置智能体提示音的音量。'],['Manage your notification preferences.','管理通知选项。'],
+    ['Always Proceed','始终继续'],['Always Ask','始终询问'],['Agent always asks for review.','智能体每次都会请求审查。'],['Automatically decide if commands run.','自动判断是否执行命令。'],['Optimize the interface and terminal output for screen readers.','优化界面和终端输出，以便屏幕阅读器使用。'],['Replace the default browser right-click menu with quick actions.','用快捷操作替换浏览器默认右键菜单。'],['Open in Side Panel','在侧栏中打开'],['Open in Built-in Browser','在内置浏览器中打开'],['Open in External Browser','在外部浏览器中打开'],['Toggle Model Selector','打开模型选择器'],['Toggle Terminal','切换终端'],['Toggle File Viewer','切换文件查看器'],['Split Terminal','拆分终端'],['New Terminal Tab','新建终端标签页'],['Close Terminal Tab','关闭终端标签页'],['Select All','全选'],['Display Options','显示选项'],['Group By','分组方式'],['Sort By','排序方式'],['Last Updated','最近更新'],['Last Prompt','最近提问'],['Custom Order','自定义顺序'],['None','无'],['This Computer','本机'],['Remote','远程'],['Environment','环境'],['Worktree','工作树'],['Request Review','请求审查'],['Mark All as Read','全部标为已读'],['More Actions','更多操作'],['Keep Computer Awake','保持电脑唤醒'],['Run in Background','在后台运行'],['Remote Agents Data','远程智能体数据'],['Delete All Remote Agents Data','删除全部远程智能体数据'],['Privacy & Security','隐私与安全'],['User Data Collection','用户数据收集'],['Report Issue','报告问题'],['Sign in again','重新登录'],['Close sidebar','关闭侧栏'],['Open sidebar','打开侧栏'],['Show sidebar','显示侧栏'],['Hide sidebar','隐藏侧栏'],
+    ['View','视图'],['Window','窗口'],['See less','收起'],['See more','显示更多'],['Requests','请求'],['Tool calls','工具调用'],['Unpriced requests','未定价请求'],['Priced request cost','已定价请求费用'],['Connection interrupted','连接中断'],['Sending failed','消息发送失败'],['Unable to fork','无法创建分支'],['Context usage','上下文用量'],
+    ['New Conversation','新建会话'],['Automations','自动化'],['Customizations','自定义'],['Projects','项目'],['Settings','设置'],['Overview','概览'],['Review','审查'],['Files','文件'],['Terminal','终端'],['Extensions','扩展'],['Artifacts','产物'],['Marketplace','市场'],['Installed','已安装'],['Search customizations...','搜索自定义内容…'],['Search','搜索'],['Search conversations','搜索会话'],['Search conversations...','搜索会话…'],
+    ['General','通用'],['Appearance','外观'],['Account','账户'],['Models & Usage','模型与用量'],['Model Quota','模型额度'],['Model Credits','模型积分'],['Plan','套餐'],['Your Plan:','当前套餐：'],['Manage your model quota and credits.','管理模型额度与积分。'],['Refresh quota and credits data','刷新额度与积分'],['No quota information available.','暂无额度信息'],['Weekly Limit Remaining','周剩余额度'],['Five Hour Limit Remaining','5 小时剩余额度'],['Gemini Models','Gemini 模型'],['Claude and GPT models','Claude 和 GPT 模型'],
+    ['Notifications','通知'],['Keyboard Shortcuts','键盘快捷键'],['Keybindings','快捷键'],['Permissions','权限'],['Agent','智能体'],['Agent Settings','智能体设置'],['Browser','浏览器'],['MCP Servers','MCP 服务器'],['Privacy','隐私'],['Telemetry','遥测'],['Advanced','高级'],['About','关于'],['Theme','主题'],['Light','浅色'],['Dark','深色'],['System','跟随系统'],['Font Size','字体大小'],['Font size','字体大小'],['Language','语言'],['Default','默认'],['Enabled','已启用'],['Disabled','已禁用'],['Enable','启用'],['Disable','禁用'],
+    ['Add','添加'],['Details','详情'],['Install','安装'],['Uninstall','卸载'],['Remove','移除'],['Update','更新'],['Refresh','刷新'],['Open','打开'],['Close','关闭'],['Cancel','取消'],['Save','保存'],['Delete','删除'],['Rename','重命名'],['Archive','归档'],['Unarchive','取消归档'],['Duplicate','创建副本'],['Share','分享'],['Copy','复制'],['Copied','已复制'],['Copy link','复制链接'],['Copy Link','复制链接'],['More options','更多操作'],['More actions','更多操作'],['Back','返回'],['Continue','继续'],['Done','完成'],['Apply','应用'],['Reset','重置'],['Retry','重试'],['View all','查看全部'],['View All','查看全部'],['Learn more','了解更多'],['Sign out','退出登录'],['Sign in','登录'],['Upgrade','升级'],['Connected','已连接'],['Disconnected','未连接'],['Connect','连接'],['Disconnect','断开连接'],
+    ['Good response','有帮助'],['Bad response','无帮助'],['Undo to this point','撤回到此处'],['Fork Conversation','分支到新聊天'],['Fork in Current Workspace','在当前工作区创建分支'],['Fork in New Workspace','在新工作区创建分支'],['Fork in Shared Workspace','在共享工作区创建分支'],['Conversation Forked','会话已分支'],['Agent said','助手回复'],['You said','用户消息'],['Message input','消息输入'],['Ask anything, @ to mention, / for actions','输入消息，@ 引用，/ 选择操作'],['Send message','发送消息'],['Stop','停止'],['Stop generating','停止生成'],['Agent working','正在执行'],['Thinking','正在思考'],['Thinking...','正在思考…'],['Explored','探索记录'],['Read','读取'],['Edited','已编辑'],['Searched','已搜索'],['Ran','已运行'],['Waiting','等待中'],['Running','执行中'],['Completed','已完成'],['Failed','失败'],['Not started','未开始'],['Pending','待处理'],['Accept','接受'],['Reject','拒绝'],['Accept all','全部接受'],['Reject all','全部拒绝'],['View diff','查看差异'],['Show more','显示更多'],['Show less','收起'],['Expand','展开'],['Collapse','收起'],['Run','运行'],['Allow','允许'],['Deny','拒绝'],['Always allow','始终允许'],['Allow once','允许一次'],
+    ['Name','名称'],['Description','描述'],['Status','状态'],['Created','创建时间'],['Updated','更新时间'],['Schedule','计划'],['New automation','新建自动化'],['New Automation','新建自动化'],['Edit automation','编辑自动化'],['Every day','每天'],['Every week','每周'],['Every hour','每小时'],['Every weekday','工作日'],['Custom','自定义'],['Paused','已暂停'],['Resume','继续'],['Pause','暂停'],['History','历史记录'],['No results','无结果'],['No results found','未找到结果'],['Loading...','正在加载…'],['Loading','正在加载'],['Clear','清除'],['Clear filters','清除筛选'],['Filter','筛选'],['Sort','排序'],
+    ['Workspace','工作区'],['New project','新建项目'],['New Project','新建项目'],['Add folder','添加文件夹'],['Open folder','打开文件夹'],['Open Folder','打开文件夹'],['Open in editor','在编辑器中打开'],['Open in browser','在浏览器中打开'],['Open in tab','在标签页中打开'],['Open in new tab','在新标签页中打开'],['Move to project','移动到项目'],['Move to group','移动到分组'],['New group','新建分组'],['Pin','置顶'],['Unpin','取消置顶'],['Show archived','显示归档'],['Hide archived','隐藏归档'],['Archived','已归档'],['Recent','最近'],['Today','今天'],['Yesterday','昨天'],
+    ['Skills','技能'],['Rules','规则'],['Agents','智能体'],['Plugins','插件'],['Workflows','工作流'],['Manage','管理'],['Configure','配置'],['Authentication','身份验证'],['Sandbox','沙盒'],['Security','安全'],['Network','网络'],['Developer','开发者'],['Feedback','反馈'],['Give Feedback','提供反馈'],['Help','帮助'],['Check for Updates','检查更新'],['Restart','重新启动'],['Quit','退出'],['Auto','自动'],['Manual','手动'],['On','开启'],['Off','关闭'],['Always','始终'],['Never','从不'],['Ask','询问'],['Ask every time','每次询问'],
+    ['Context window','上下文窗口'],['Messages','消息'],['System tools','系统工具'],['System prompt','系统提示'],['Free space','剩余空间'],['Input context','输入上下文'],['Session statistics','会话统计'],['Display','显示'],['Actions','操作'],['Compact layout','紧凑排版'],['Context ring','上下文圆环'],['Turn duration','每轮用时'],['Expand tools from duration','点击用时展开工具'],['Branch from responses','回答分支'],['Edit messages','消息编辑'],['Task progress','任务进度'],['Restore defaults','恢复默认设置'],['Edit message','编辑消息'],['Send and regenerate','发送并重新生成'],['Sending','正在发送'],['Response actions','回答操作'],['Branch to new chat','分支到新聊天'],['Fork conversation','分支会话'],['Context and session statistics','上下文与会话统计'],['Not recorded','未记录'],['Unknown model','未知模型'],
+    ['Requests','请求事件'],['Errors','错误事件'],['Usage','用量'],['Quota','额度'],['Pricing','价格'],['Input','输入'],['Output','输出'],['Cache read','缓存读取'],['Thinking tokens','思考 Token'],['Average speed','平均速度'],['Peak request speed','峰值速度'],['Latest speed','最近速度'],['First token latency','首 Token 延迟'],['Model time','模型用时'],['Tool time','工具用时'],['Cache hit','缓存命中'],['Total tokens','累计 Token'],['Turns / steps','轮次 / 步数'],['Tool calls','工具调用'],['Request count','请求次数'],['Error count','错误次数'],['Time','时间'],['Model','模型'],['Result','结果'],['Speed / latency','速度 / 延迟'],['API equivalent','API 参考费用'],['All models','全部模型'],['All results','全部结果'],['Success','成功'],['Error','错误'],['Recorded','已记录'],['No requests recorded','暂无请求记录'],['No errors recorded','暂无错误记录'],['Usage heatmap','用量热力图'],['Tokens','Token'],['Cost','费用'],['Less','少'],['More','多'],['Refresh prices','查询价格'],['Official prices','官方价格'],['Price per 1M tokens (USD)','每百万 Token 单价 (USD)'],['No verified price','未定价'],['Remaining','剩余'],['Resets at','重置时间'],['Estimated total budget','估算总额度'],['Collecting samples','采样中'],['Low confidence','低置信度'],['Experimental context target','实验性上下文目标'],['Observed limit','实际记录上限'],['No active conversation','未选择会话'],['No task checklist','暂无任务清单'],['Waiting for task','等待任务'],['In progress','进行中'],['Complete','已完成'],['Idle','空闲'],['Not available','不可用'],['Search events','搜索事件'],['All conversations','全部会话'],['Current conversation','当前会话'],['Last 53 weeks','最近 53 周'],['Recorded locally','本机记录'],['Context','上下文'],['Refresh data','刷新数据'],['Price lookup failed','价格查询失败'],
+    ['Context requests may still be capped by the client or server.','请求上限仍可能受客户端或服务端限制。'],['API reference cost is an estimate, not subscription billing.','API 参考费用为估算值，不代表订阅账单。'],['Peak speed is the fastest recorded request average.','峰值为单次请求的最高平均速度。'],['Progress follows the task checklist.','进度依据任务清单。'],['This checklist predates the current turn.','此清单早于当前轮次。'],['Common interface and settings text','常用界面与设置文案'],['5-hour limit','5 小时限额'],['Weekly limit','周限额'],['Request details','请求详情'],['Error details','错误详情'],
+    ['Context (Experimental)','上下文（实验性）'],['Context target','上下文目标'],
+    ['Quote','引用'],['Ask /btw','顺便问 /btw'],['Local Permissions','本地权限'],['Remote Permissions','远程权限'],['Global Permissions','全局权限'],['This Conversation','本会话'],
+    ['Every command requires approval.','每条命令均需批准。'],['Ask before sensitive operations.','执行敏感操作前询问。'],['Run all commands without restrictions.','无限制运行所有命令。'],
+    ['Only this conversation uses this preset.','仅当前会话使用此预设。'],['Your This Computer setting','来自“本机”默认设置'],['Your Remote setting','来自“远程”默认设置'],['Use Global Settings','使用全局设置'],['Inherit Global','继承全局设置'],
+    ['Permission Preset','权限预设'],['Security Preset','安全预设'],['Permission Settings','权限设置'],['Permission Details','权限详情'],['Network Permissions','网络权限'],['Terminal & Tooling Permissions','终端与工具权限'],
+    ['Require Review','需要审查'],['Proceed in Sandbox','在沙盒中继续'],['Enable Sandbox Mode','启用沙盒模式'],['Restricts agent tools to a secure, isolated local sandbox.','将智能体工具限制在安全隔离的本地沙盒中。'],
+    ['Controls whether terminal commands require your approval before running.','控制终端命令在运行前是否需要你批准。'],['Outside of folders file access policy','工作目录外文件访问策略'],['Configures how the agent tries to access files outside of its working folders.','设置智能体访问工作目录以外文件时的策略。'],
+    ['Commands Outside Sandbox','沙盒外命令'],['MCP Tools','MCP 工具'],['Terminal sandbox is not supported in this environment','当前环境不支持终端沙盒'],['Disabled by organization policy','已被组织策略禁用'],['managed by your organization','由你所在的组织管理'],
+    ['Configure global allowed and denied resource permissions.','设置全局允许和拒绝的资源权限。'],['Manually customize individual settings.','手动自定义各项详细设置。'],
+    ['Background Tasks','后台任务'],['Subagents','子智能体'],['Side Questions','侧边对话'],['Goals','目标'],['Documents','文档'],['Links','链接'],['Modified Files','已修改文件'],['Uploads','上传文件'],['Customize Sections','自定义显示项'],
+    ['Edit Conversation Title','编辑会话标题'],['Rename Conversation','重命名会话'],['Conversation name','会话名称'],['New Conversation Button','新建会话按钮'],['Which workspace the New Conversation button and keyboard shortcut start you in.','设置点击“新建会话”按钮或使用快捷键时默认进入的工作区。'],
+    ['New Workspace','新建工作区'],['No Project','不关联项目'],['Last Workspace','上次使用的工作区'],['Create a new workspace from your first message.','根据你的第一条消息自动创建新工作区。'],['Start without a workspace, for general questions.','不关联工作区，适用于日常提问。'],['Reuse your last workspace.','继续使用上一次的工作区。'],
+    ['Workspaces','工作区列表'],['Labs','实验室'],['Try out early-stage features before they ship. These may be changed or removed at any time. These features are experimental, and we make no guarantees about performance or functionality.','抢先体验尚在早期阶段的功能。这些实验性功能可能随时调整或移除，不保证性能或稳定性。']
+  ];
+  pairs.push(
+    ['Search shortcuts...', '搜索快捷键...'],
+    ['Settings for conversations outside of projects', '未关联项目的会话设置'],
+    ['Hide breakdown', '隐藏明细'],
+    ['Notification settings', '通知设置'],
+    ['Automatic check for updates', '自动检查更新']
+  );
+  pairs.push(['Mark Unread','标为未读'],['Mark Read','标为已读'],['5h limit','5 小时限额'],['Split','拆分视图'],['Split Right','向右拆分'],['Split Down','向下拆分'],['Replace with New','替换为新会话'],['Conversation Name','会话名称'],['Conversation ID','会话 ID'],['Project Name','项目名称'],['Search or enter a URL','搜索或输入网址'],['Open File','打开文件'],['Side Question','侧边对话'],['New Side Question','新建侧边对话'],['Ask a side question without interrupting the main conversation','发起侧边对话，不打断主对话'],['See all','查看全部'],['Restart to Update','重启以更新'],['Not recorded','未记录'],['Waiting for a task','等待任务'],['In progress','进行中'],['Result','结果'],['All results','全部结果'],['Average speed','平均速度'],['Failed to fork conversation','无法创建会话分支'],['Creating the forked conversation...','正在创建分支会话…'],['Creating worktree for the forked conversation...','正在为分支会话创建工作树…'],['Creating workspace for the forked conversation...','正在为分支会话创建工作区…'],['Fork warning','分支提示'],['Failed to create forked conversation: forking is not supported for conversations that have invoked subagents','官方底层暂不支持对调用过子智能体（如浏览器子代理）的会话创建分支'],['forking is not supported for conversations that have invoked subagents','官方底层暂不支持对调用过子智能体（如浏览器子代理）的会话创建分支'],['Failed to create forked conversation: forking is not supported for battle mode conversations: end the battle, then fork the source conversation','对战模式进行中暂不支持创建分支，请先结束对战后再试'],['File context menu','文件右键菜单'],['Open with default app','用默认应用打开'],['Show in folder','打开所在文件夹'],['Copy file','复制文件'],['Copy path','复制路径'],['File copied','已复制文件'],['File path copied','已复制路径'],['Failed to open file','打开文件失败'],['Failed to open folder','打开文件夹失败'],['Failed to copy file','复制文件失败'],['Failed to copy path','复制路径失败']);
+  pairs.push(...[["Show All", "显示全部"], ["Not in Project", "未关联项目"], ["Sign Out", "退出登录"], ["Version", "版本"], ["Delete All Data", "删除全部数据"], ["Terms of Service", "服务条款"], ["By using this app, you agree to its", "使用此应用即表示你同意其"], ["When toggled on, Antigravity collects usage data to help Google enhance performance and features.", "启用后，Antigravity 会收集使用数据，以改进性能和功能。"], ["Receive product updates, tips, and promotions from Google Antigravity via email.", "通过电子邮件接收 Antigravity 的产品更新、使用提示和推广信息。"], ["You are subscribed to the best Google AI plan.", "你已订阅 Google AI 的最高级套餐。"], ["Permanently delete your remote conversations, projects, scheduled tasks, connected plugins and settings. Data in the desktop app and your Google account are not affected.", "永久删除远程会话、项目、计划任务、已连接插件和设置。桌面应用及 Google 账户中的数据不受影响。"], ["Configure agent execution, queued message delivery, and permissions.", "设置智能体执行方式、后续消息发送时机和权限。"], ["Interface Layout", "界面布局"], ["Knowledge Work", "日常工作"], ["Simplified interface for research, writing, and everyday tasks.", "适用于研究、写作和日常任务的简洁界面。"], ["Software Engineering", "软件开发"], ["Full interface for coding, developer tools, and managing agents.", "提供编程、开发工具和智能体管理功能的完整界面。"], ["Configure what the agent can do in local and remote conversations.", "设置智能体在本地与远程会话中的操作权限。"], ["Controls the actions the agent can take.", "控制智能体可以执行的操作。"], ["Controls permissions for remote conversations.", "控制远程会话的操作权限。"], ["Agent Behavior", "智能体行为"], ["Plan Review Policy", "计划审查策略"], ["Whether the agent asks you to review its documents.", "是否要求你审查生成的文档。"], ["Modified in", "已修改"], ["projects", "个项目"], ["Type", "键入"], ["and select", "并选择"], ["to have the agent generate a plan.", "即可让智能体生成计划。"], ["Queued Messages", "后续消息"], ["Configure when follow-up messages are sent.", "选择后续消息的发送时机。"], ["Queue", "排队发送"], ["Send Immediately", "立即发送"], ["Queue until after the current turn.", "等待当前轮次结束后发送。"], ["Interrupt the agent and send immediately.", "中断当前执行并立即发送。"], ["Keyboard shortcuts", "键盘快捷键"], ["Voice mode", "语音模式"], ["Voice Mode", "语音模式"], ["Voice", "音色"], ["The voice used in Voice mode. Powered by Gemini Live.", "语音模式使用的音色，由 Gemini Live 提供。"], ["Not set", "未设置"], ["Change", "更改"], ["Change…", "更改…"], ["Microphone", "麦克风"], ["Input device for voice mode and dictation.", "语音模式和语音输入使用的设备。"], ["System default", "系统默认"], ["How loud Antigravity's voice is.", "设置 Antigravity 的语音音量。"], ["Manage Antigravity app settings.", "管理 Antigravity 应用设置。"], ["Notification Settings", "通知设置"], ["To modify notification settings, open your operating system's system preferences.", "在操作系统设置中修改通知选项。"], ["Open System Preferences", "打开系统设置"], ["Chat", "聊天"], ["Conversation Steps", "会话详情"], ["Choose how much detail is shown during a conversation.", "选择会话中显示的执行详情。"], ["Verbose", "详细"], ["Concise", "简洁"], ["Contrast", "对比度"], ["Strong", "高"], ["Font", "字体"], ["Light Theme", "浅色主题"], ["Dark Theme", "深色主题"], ["Preset", "预设"], ["Default Light", "默认浅色"], ["Default Dark", "默认深色"], ["Background", "背景"], ["Foreground", "前景"], ["Accent", "强调色"], ["Code Preview", "代码预览"], ["Configure default behaviors, skills, and MCP servers.", "设置默认行为、技能和 MCP 服务器。"], ["Token Usage", "Token 用量"], ["The breakdown below shows token usage from customizations like rules, skills, and MCP. If a budget is exceeded, large rules are demoted to path pointers and large customizations are excluded automatically.", "以下显示规则、技能和 MCP 等自定义内容的 Token 用量。超出预算时，较大的规则会改为路径引用，较大的自定义内容会自动排除。"], ["Other Customizations", "其他自定义内容"], ["Global", "全局"], ["Plugin:", "插件："], ["Build With Google Plugins", "Build With Google 插件"], ["Browse and enable plugins from the Build With Google catalog.", "浏览并启用 Build With Google 目录中的插件。"], ["Customize", "自定义"], ["Built-in Browser", "内置浏览器"], ["External Browser", "外部浏览器"], ["Choose where links open by default when clicked.", "选择链接的默认打开方式。"], ["Folder where files downloaded in the built-in browser are saved.", "内置浏览器下载文件的保存位置。"], ["Clear visited URLs and autocomplete suggestions from the built-in browser.", "清除内置浏览器的浏览记录和自动补全建议。"], ["Configure allowed and denied URLs for the browser subagent. It runs in the built-in browser, so no separate browser install is needed.", "设置浏览器子智能体允许或禁止访问的网址。它使用内置浏览器，无需另行安装。"], ["Edit", "编辑"], ["Navigation", "导航"], ["Open Conversation Picker", "打开会话选择器"], ["Go Back", "后退"], ["Go Forward", "前进"], ["New Tab", "新建标签页"], ["Reopen Closed Tab", "重新打开已关闭的标签页"], ["Select Previous Conversation", "切换到上一个会话"], ["Select Next Conversation", "切换到下一个会话"], ["Move Conversation Up", "上移会话"], ["Move Conversation Down", "下移会话"], ["Previous Side Panel Tab", "上一个侧栏标签页"], ["Next Side Panel Tab", "下一个侧栏标签页"], ["Open Settings", "打开设置"], ["Focus Input", "聚焦输入框"], ["Toggle Voice Recording", "切换语音录制"], ["Mute Voice Mic", "麦克风静音"], ["Mute Voice Speaker", "扬声器静音"], ["Find in Pane", "在面板中查找"], ["Archive This Conversation", "归档当前会话"], ["Layout Controls", "布局控制"], ["Toggle Sidebar", "切换侧栏"], ["Toggle Side Panel", "切换辅助侧栏"], ["Toggle Maximize Side Panel", "切换侧栏最大化"], ["Toggle Overview Panel", "切换概览面板"], ["Zoom In", "放大"], ["Zoom Out", "缩小"], ["Reset Zoom", "重置缩放"], ["When toggled on, Antigravity will use your AI credits to fulfill model requests once you're out of model quota. Antigravity will always use your model quota first before using AI credits.", "启用后，模型额度用尽时会使用 AI 积分继续请求。Antigravity 始终优先使用模型额度。"], ["Feedback Type", "反馈类型"], ["Bug Report", "错误报告"], ["Feature Request", "功能建议"], ["Auth and Billing", "登录与账单"], ["Remote Control Issue", "远程控制问题"], ["General Feedback", "其他反馈"], ["Please describe the issue in detail. The more actionable your feedback, the quicker our team can address your request. Some helpful information includes:", "请详细描述问题，并提供以下信息，以便我们处理："], ["Steps to reproduce the issue", "复现步骤"], ["Expected behavior", "预期表现"], ["Actual behavior", "实际表现"], ["Any error messages", "错误信息"], ["Any relevant information", "其他相关信息"], ["Steps to Reproduce", "复现步骤"], ["Attach a screenshot (optional)", "附加截图（可选）"], ["Attach Antigravity server logs", "附加 Antigravity 服务日志"], ["Submit", "提交"], ["Visit", "访问"], ["Legal Help", "法律帮助"], ["to ask for content changes for legal reasons.", "，申请因法律原因修改内容。"], ["Developer-only tools. These settings do not affect other users.", "开发者工具，这些设置不影响其他用户。"], ["Voice engine", "语音引擎"], ["Whatever the voice-engine-addr flag serves you.", "使用 voice-engine-addr 参数指定的服务。"], ["Default (Mendel)", "默认（Mendel）"], ["Accounts & Quota", "账号与额度"], ["Switch account", "切换账号"], ["Sidebar account switcher", "侧栏账号切换器"], ["Add account", "添加账号"], ["Manage all accounts & quota", "管理全部账号与额度"], ["Current account", "当前账号"], ["Switch", "切换"], ["Alias", "备注"], ["Accounts", "账号管理"], ["Auto switch on quota limit", "耗尽自动切号"], ["List view", "列表视图"], ["Card view", "卡片视图"], ["5H", "5H"], ["Weekly", "周配额"], ["Last used", "最后使用"], ["Search accounts...", "搜索账号、邮箱或备注…"], ["Accounts & switching", "账号与切换"], ["Default account view", "账号管理默认视图"], ["Updated ", "更新于 "], ["Re-login required", "需重新登录"], ["5H limit", "5H 限额"], ["Drag to reorder", "拖动排序"], ["Enable multi-account switching", "启用多账号切换"], ["Refresh quota", "刷新额度"], ["Refresh credentials", "刷新凭证"], ["Thinking effort", "思考深度"], ["Controls how much time and quota the model spends reasoning before responding. Higher effort improves accuracy on hard problems, at the cost of slower responses and higher quota use.", "控制模型在回复前投入多少时间与额度进行推理。更高的思考深度可提升复杂问题的准确度，但会增加响应耗时与额度消耗。"], ["View Usage", "查看用量"], ["Promote to Conversation", "提升为正式会话"], ["Promote to conversation", "提升为正式会话"], ["Stop Side Question", "停止侧边对话"], ["Stop side question", "停止侧边对话"], ["Cannot promote while side question is running", "侧边对话运行中，暂无法提升为正式会话"], ["Cannot promote a subagent's side question", "无法提升子智能体的侧边对话"], ["Cannot promote during Battle Mode — end the battle first", "对战模式进行中无法提升，请先结束对战"], ["Orchestrator Settings", "Orchestrator 设置"], ["Orchestrator Model", "规划模型"], ["Executor Model", "执行模型"], ["Choose the models Orchestrator uses. A larger, smarter orchestrator model with a faster, cheaper executor gives high quality for fewer tokens.", "选择 Orchestrator 使用的模型。较强的规划模型搭配更快、更省的执行模型，可在更低 Token 消耗下保持高质量。"], ["Plans the work, makes design decisions, and reviews the result. Pick a top-tier model. You can also pick one per conversation from the Orchestrator row in the model menu.", "负责拆解任务、做设计决策与审查结果，建议选择旗舰模型。也可以在模型菜单的 Orchestrator 行内为单个会话单独选择。"], ["Carries out the plan: searches, edits, builds, and tests. Pick a faster, cheaper model.", "负责执行计划，包括检索、编辑、构建与测试，建议选择更快、更省的模型。"], ["The source conversation's subagents were not branched with it; they remain there.", "原会话的子智能体未随分支带入，仍保留在原会话中。"], ["The source conversation's background tasks were not branched with it; they keep running there.", "原会话的后台任务未随分支带入，仍保留在原会话中运行。"], ["Delete Conversation", "删除会话"], ["Are you sure you want to delete this conversation? This action cannot be undone.", "确定要删除此会话吗？此操作无法撤销。"], ["Minimize", "最小化"], ["Maximize", "最大化"], ["Unmaximize", "还原窗口"], ["Restore", "还原"], ["Toggle Full Screen", "切换全屏"], ["Reload", "重新加载"], ["Force Reload", "强制重新加载"], ["Actual Size", "实际大小"], ["Toggle Developer Tools", "切换开发者工具"], ["Create Project", "创建项目"], ["Command Palette", "命令面板"], ["Open Command Palette", "打开命令面板"], ["Quit Antigravity", "退出 Antigravity"], ["About Antigravity", "关于 Antigravity"], ["This computer", "本机"], ["Input Box", "输入框"], ["Queued messages", "后续消息"], ["Choose which key sends a message in the chat composer.", "选择在聊天输入框中发送消息的按键。"], ["Enter to send", "按 Enter 发送"], ["Attach to chat", "引用到输入框"], ["Failed to attach file", "引用到输入框失败"], ["Looking for this conversation's swarm…", "正在查找当前会话的蜂群…"], ["No swarm in this conversation", "当前会话暂无蜂群"], ["Swarms started in this conversation appear here automatically, with their board, members and @mention graph. Start one with", "当前会话中启动的蜂群会自动显示在这里，包含讨论板、成员列表和 @ 提及关系图。输入"], ["Watching for a swarm", "正在监听蜂群启动"], ["Live", "实时"], ["Reconnecting", "重新连接中"], ["Updates automatically", "自动更新"], ["Lost contact with the swarm sidecar; retrying", "与蜂群服务断开连接，正在重试"], ["Board", "讨论板"], ["Members", "成员"], ["Graph", "关系图"], ["Raw", "原始数据"], ["Untitled swarm", "未命名蜂群"], ["Narrator’s page", "旁白页面"], ["Narrator's page", "旁白页面"], ["Plain view", "精简视图"], ["Narrator view (AI-generated)", "旁白视图（AI 生成）"], ["Want this view different? Tell the coordinator.", "想调整此视图？直接告诉协调者。"], ["Open coordinator chat", "打开协调者会话"], ["No narrator in this swarm. Ask the coordinator to add one.", "此蜂群暂无旁白员，可让协调者添加一个。"], ["The narrator is updating the overview", "旁白员正在更新概览"], ["The narrator is waiting for new board posts", "旁白员正在等待新动态"], ["The narrator was killed; the overview no longer updates", "旁白员已终止，概览不再更新"], ["Click a link in the view to open it.", "点击视图中的链接即可打开。"], ["Opening files needs the app.", "打开文件需要在客户端中操作。"], ["The coordinator asked. Answer it in its chat.", "协调者发起了询问，请在其会话中回复。"], ["The team", "团队"], ["Team", "团队"], ["Coordinator", "协调者"], ["Blocked", "已阻塞"], ["Planned next", "下一步计划"], ["Goal", "目标"], ["Threads", "工作线"], ["Now", "当前"], ["Progress", "进度"], ["Compare with now", "与当前对比"], ["Hide compare", "隐藏对比"], ["Compare then and now", "对比前后状态"], ["Open full timeline", "打开完整时间线"], ["Nothing blocked", "无阻塞项"], ["Needs you", "需要你处理"], ["Stuck", "已卡住"], ["Nothing waiting", "无等待项"], ["Nothing stuck", "无卡住项"], ["Nothing needs you", "暂无需要你处理的事项"], ["Nothing running", "暂无运行中任务"], ["Nothing planned", "暂无后续计划"], ["Latest action", "最新动作"], ["Scrub through progress", "拖动查看进度"], ["Other", "其他"], ["Tasks", "任务"], ["Task", "任务"], ["Moving", "推进中"], ["Frames", "帧"], ["All workers", "全部成员"], ["Filter by worker", "按成员筛选"], ["Search members", "搜索成员"], ["Search posts", "搜索动态"], ["Filters", "筛选"], ["Filters (active)", "筛选（已启用）"], ["From anyone", "来自任意成员"], ["To anyone", "提及任意成员"], ["To no one", "未提及成员"], ["All channels", "全部频道"], ["All", "全部"], ["Posts in every channel", "所有频道的动态"], ["Show posts by one member", "仅显示指定成员的动态"], ["Show posts that call on one member", "仅显示提及指定成员的动态"], ["Show posts in one channel", "仅显示指定频道的动态"], ["Follow", "自动跟随"], ["Keep the newest post in view", "始终滚动到最新动态"], ["Latest", "跳到最新"], ["No posts yet", "暂无动态"], ["New", "新"], ["Not on the roster", "不在成员名单中"], ["Hidden from the board; click to show", "已在讨论板隐藏，点击显示"], ["Click to hide from the board", "点击在讨论板隐藏"], ["Active", "活跃"], ["Working", "工作中"], ["Standing by", "待命中"], ["Resting", "休眠中"], ["Retired", "已退出"], ["Killed", "已终止"], ["Active: mid-turn (thinking, running a tool, or waiting on the model)", "活跃：正在执行轮次（思考、运行工具或等待模型响应）"], ["Waiting: turn ended, asleep on the board until a post wakes it", "等待中：当前轮次已结束，休眠直至新动态唤醒"], ["Killed: removed from the swarm", "已终止：已从蜂群移除"], ["Jump to start", "跳到开头"], ["Previous post (←)", "上一条动态 (←)"], ["Next post (→)", "下一条动态 (→)"], ["Play / pause replay (space)", "播放 / 暂停回放（空格）"], ["Play replay", "播放回放"], ["Pause replay", "暂停回放"], ["Scrub through board posts", "拖动浏览讨论板动态"], ["Show everything and follow live", "显示全部并实时跟随"], ["Hive", "蜂巢图"], ["Mentions", "提及图"], ["Threads as cells, with each worker where it works", "以单元格展示各工作线及成员位置"], ["Who @mentions whom", "成员间 @ 提及关系"], ["Hide inactive", "隐藏非活跃"], ["Hide killed and inactive members from the graph", "在关系图中隐藏已终止和非活跃成员"], ["Expand @all", "展开 @all"], ["Draw @all as an edge to every member", "将 @all 展开为指向所有成员的连线"], ["Replay pacing", "回放节奏"], ["Even pacing", "匀速回放"], ["Real-time gaps", "按实际间隔"], ["Replay speed", "回放速度"], ["Export GIF", "导出 GIF"], ["Export graph replay as an animated GIF", "将关系图回放导出为 GIF 动图"], ["Nothing to export yet.", "暂无可导出的内容。"], ["Could not export GIF.", "导出 GIF 失败。"], ["Could not download GIF from embedded pane.", "无法在嵌入面板中下载 GIF。"], ["@mention, width = count", "@提及，线条粗细表示次数"], ["via @all", "通过 @all"], ["posted with no mention", "未提及任何人的动态"], ["@all posts, drawn by Expand @all", "@all 动态（勾选“展开 @all”时绘制）"], ["Right-click image to save, or open in a new tab.", "右键图片保存，或在新标签页中打开。"], ["Fit the whole swarm", "适配整个蜂巢"], ["Where each worker is, by thread", "按工作线查看各成员位置"], ["Zoom", "缩放"], ["Zoom in", "放大"], ["Zoom out", "缩小"], ["Previous", "上一个"], ["Next", "下一个"], ["Copy to clipboard", "复制到剪贴板"], ["Copy failed", "复制失败"], ["For most deep reasoning and complex problems", "适用于深度推理与复杂问题"], ["For your hardest, long-horizon tasks", "适用于高难度、长周期任务"], ["The original Gemini 4 model for advanced workflows", "适用于高阶工作流的经典 Gemini 4 模型"], ["For speed and efficiency in execution tasks", "适用于追求速度与效率的执行任务"], ["Neon that may offload routine steps to Hydrogen. Same Neon-level quality, fewer tokens used.", "由 Neon 规划并将常规步骤分流给 Hydrogen 执行，保持同等质量同时减少 Token 消耗。"], ["Carbon that may offload routine steps to Hydrogen. Same Carbon-level quality, fewer tokens used.", "由 Carbon 规划并将常规步骤分流给 Hydrogen 执行，保持同等质量同时减少 Token 消耗。"], ["Argon that may offload routine steps to Hydrogen. Same Argon-level quality, fewer tokens used.", "由 Argon 规划并将常规步骤分流给 Hydrogen 执行，保持同等质量同时减少 Token 消耗。"], ["Offloads routine steps to a faster executor. Same quality, fewer tokens used.", "将常规步骤分流给更快的执行模型，保持同等质量同时减少 Token 消耗。"], ["Notice", "提示"], ["GPT-OSS will be removed from Antigravity on November 30, 2026.", "GPT-OSS 将于 2026 年 11 月 30 日从 Antigravity 中移除。"], ["Chat Layout", "聊天布局"], ["Conversation Width", "会话宽度"], ["Configure the maximum width of the conversation panel.", "设置会话面板的最大宽度。"], ["Configure the default width of markdown artifacts.", "设置 Markdown 产物的默认宽度。"], ["Default Customizations", "默认自定义项"], ["Include default customizations, such as default skills.", "包含默认自定义内容（如内置技能）。"], ["When enabled, the agent will include default customizations, including default skills.", "启用后，智能体将包含默认自定义内容（包括内置技能）。"], ["Customize Global Skills", "管理全局技能"], ["Custom Agents", "自定义智能体"], ["Manage Hooks", "管理钩子"], ["Hooks", "钩子"], ["Configure hooks that run on agent lifecycle events.", "配置在智能体生命周期事件触发的钩子。"], ["Installed MCP Servers", "已安装的 MCP 服务器"], ["Add MCP Servers", "添加 MCP 服务器"], ["Refresh MCP servers", "刷新 MCP 服务器"], ["External tools the agent can call via Model Context Protocol.", "智能体可通过模型上下文协议（MCP）调用的外部工具。"], ["Configure external tools via Model Context Protocol.", "通过模型上下文协议（MCP）配置外部工具。"], ["Tool Permissions", "工具权限"], ["File Permissions", "文件权限"], ["Terminal Commands", "终端命令"], ["Browser Actuation Permissions", "浏览器操作权限"], ["Allow/deny agent read access to specific files or directories.", "允许或禁止智能体读取指定文件或目录。"], ["Allow/deny agent write access to specific files or directories.", "允许或禁止智能体写入指定文件或目录。"], ["Allow/deny agent read access to specific URLs or domains.", "允许或禁止智能体读取指定网址或域名。"], ["Allow/deny specific terminal commands.", "允许或禁止指定的终端命令。"], ["Allow/deny agent command execution outside the sandbox.", "允许或禁止智能体在沙盒外执行命令。"], ["Configure allowed and denied paths for file reads and writes.", "配置文件读写的允许与拒绝路径。"], ["Configure allowed and denied URLs for reading.", "配置允许和禁止读取的网址。"], ["Configure allowed terminal commands.", "配置允许执行的终端命令。"], ["Configure allowed commands outside the sandbox.", "配置允许在沙盒外执行的命令。"], ["Configure GitHub access policies.", "配置 GitHub 访问策略。"], ["Configure workspace-specific permissions, resources, and customizations.", "配置当前工作区专属的权限、资源和自定义项。"], ["Command setup script", "命令前置脚本"], ["A shell setup script run before every command the agent executes.", "智能体每次执行命令前运行的 Shell 初始化脚本。"], ["Enable terminal sandbox", "启用终端沙盒"], ["Terminal command auto execution", "终端命令自动执行"], ["Custom Context Menus", "自定义右键菜单"], ["Screen Reader Mode", "屏幕阅读器模式"], ["Automatically prompt you to restart the app when a new update is available. When disabled, you can check for updates manually from the app menu.", "有新版本可用时自动提示重启应用；关闭后可在应用菜单中手动检查更新。"], ["Show how full the context window is next to the send button. Click it for a breakdown and to see your model quota.", "在发送按钮旁显示上下文窗口占用情况，点击可查看明细与模型额度。"], ["Clear history, cookies and site data from the built-in browser, or manage cookies for each site.", "清除内置浏览器的历史记录、Cookie 与站点数据，或按站点管理 Cookie。"], ["Cookies and site data", "Cookie 与站点数据"], ["Cookies by Site", "按站点查看 Cookie"], ["Clear Browsing Data?", "清除浏览数据？"], ["Danger Zone", "危险操作区"], ["Delete All Remote Agents Data?", "删除全部远程智能体数据？"], ["Delete all recordings?", "删除全部录制记录？"], ["Delete Task", "删除任务"], ["Keybinding Scheme", "快捷键方案"], ["Customize Shortcuts", "自定义快捷键"], ["Open Keyboard Shortcuts", "打开快捷键设置"], ["Only stored on your machine.", "仅保存在本机。"], ["Settings Unavailable", "设置暂不可用"], ["Confirm Undo", "确认撤回"], ["Full Error", "完整错误"], ["Model quota reached", "已达模型额度上限"], ["Baseline model quota reached", "已达基础模型额度上限"], ["Insufficient AI Credits", "AI 积分不足"], ["Authentication expired", "登录状态已过期"], ["Action required", "需要操作"], ["Verification required", "需要验证"], ["Plan upgrade required", "需要升级套餐"], ["Daily conversation limit reached", "已达每日会话上限"], ["Conversation limit reached", "已达会话上限"], ["Error Loading Models", "加载模型失败"], ["No Models Available", "暂无可用模型"], ["Select Model to Send Message", "请选择模型后再发送消息"], ["Agent terminated due to error", "智能体因错误终止"], ["Conversation Archived", "会话已归档"], ["Conversation Unarchived", "已取消归档会话"], ["Conversation unavailable", "会话不可用"], ["This side question isn't available in this conversation.", "当前会话无法使用此侧边对话。"], ["Accept Step", "接受此步"], ["Reject Step", "拒绝此步"], ["Cancel Generation", "停止生成"], ["New Window", "新建窗口"], ["Close Tab", "关闭标签页"], ["Split Conversation Vertically", "左右拆分会话"], ["Split Conversation Horizontally", "上下拆分会话"], ["Equalize Split Panes", "均分拆分窗格"], ["File Picker", "文件选择"], ["Search Conversations", "搜索会话"], ["Open Workspace Selector", "打开工作区选择器"], ["Add to Chat", "添加到聊天"], ["Quote Selection", "引用所选内容"], ["Side Question Selection", "针对所选发起侧边对话"], ["Comment on Selection", "评论所选内容"], ["Code Search", "代码搜索"], ["Copy Conversation Markdown", "复制会话 Markdown"], ["Pin This Conversation", "置顶当前会话"], ["Unpin This Conversation", "取消置顶当前会话"], ["Find in Conversation", "在会话中查找"], ["Jump to Previous Prompt", "跳到上一条提问"], ["Jump to Next Prompt", "跳到下一条提问"], ["Mark This Conversation as Read", "将当前会话标为已读"], ["Mark This Conversation as Unread", "将当前会话标为未读"], ["Rename This Conversation", "重命名当前会话"], ["Move to New Group", "移动到新分组"], ["Remove from Group", "从分组移除"], ["Copy Conversation ID", "复制会话 ID"], ["Download Diagnostics", "下载诊断日志"], ["Toggle Between Light/Dark Themes", "切换浅色 / 深色主题"], ["Switch to This Computer", "切换到本机"], ["Collapse All Folders", "折叠全部文件夹"], ["Expand All Folders", "展开全部文件夹"], ["Start Voice Recording", "开始语音录制"], ["Stop Voice Recording", "停止语音录制"], ["Toggle Word Wrap", "切换自动换行"], ["Toggle Project Selector", "打开项目选择器"], ["Toggle Environment Selector", "打开环境选择器"], ["Provide Feedback", "提供反馈"], ["Copy Image", "复制图片"], ["Save Image", "保存图片"], ["Save Image As...", "图片另存为…"], ["Save Image As…", "图片另存为…"], ["Image copied", "已复制图片"], ["Image saved", "已保存图片"], ["Failed to copy image", "复制图片失败"], ["Failed to save image", "保存图片失败"], ["Pinned Conversations", "置顶会话"], ["Open in Tab", "在标签页中打开"], ["Open in New Tab", "在新标签页中打开"], ["Open Link in New Tab", "在新标签页中打开链接"], ["Open Link in External Browser", "在外部浏览器中打开链接"], ["Copy Link Address", "复制链接地址"], ["Open Image in New Tab", "在新标签页中打开图片"], ["Copy Image Address", "复制图片地址"], ["Cut", "剪切"], ["Paste", "粘贴"], ["Downloads", "下载"], ["Cancel download", "取消下载"], ["Remove from list", "从列表移除"], ["Forward", "前进"], ["View site information", "查看网站信息"], ["Open in external browser", "在外部浏览器中打开"], ["Add screenshot to conversation", "添加截图到会话"], ["Capture Screenshot", "截取屏幕"], ["Capture Console Logs", "捕获控制台日志"], ["Mention Page", "引用当前页面"], ["Add inline comment", "添加行内评论"], ["Edit comment", "编辑评论"], ["Delete comment", "删除评论"], ["Click to view or edit comment", "点击查看或编辑评论"], ["Resume comment draft", "恢复评论草稿"], ["Discard comment draft", "丢弃评论草稿"], ["Recent Files", "最近文件"], ["Pinned", "已置顶"], ["Modified", "已修改"], ["Deleted", "已删除"], ["Renamed", "已重命名"], ["Added (Staged)", "已新增（已暂存）"], ["Untracked (Unstaged)", "未跟踪（未暂存）"], ["Files modified by the agent in this conversation", "智能体在本会话中修改的文件"], ["Background tasks and terminals agents left running, across all conversations.", "跨所有会话仍在后台运行的任务和终端。"], ["Copy Project Name", "复制项目名称"], ["Project Settings", "项目设置"], ["Reveal in Finder", "在访达中显示"], ["Show in File Explorer", "在文件资源管理器中显示"], ["Show in File Manager", "在文件管理器中显示"], ["Delete Project", "删除项目"], ["Yes, allow", "是，允许"], ["Yes, allow this time", "是，仅本次允许"], ["Yes, allow this download", "是，允许此次下载"], ["Yes, allow for this conversation", "是，在本会话中允许"], ["Yes, and always allow", "是，并始终允许"], ["Yes, and always allow in this conversation", "是，并在本会话中始终允许"], ["Yes, save rule in this conversation", "是，在本会话中保存此规则"], ["Yes, save rule globally", "是，全局保存此规则"], ["(tell the agent what to do instead)", "（告诉智能体改用什么方式处理）"], ["Thought Process", "思考过程"], ["Open this pane from a conversation to see its swarm. Swarms started there appear here automatically; start one with", "请在具体会话中打开此面板以查看蜂群。该会话中启动的蜂群会自动显示在这里；输入"], ["Tasks done", "已完成任务"], ["Message just sent", "刚发送消息"], ["Waiting on", "等待对象"], ["Waiting on @coordinator", "等待 @coordinator"], ["Exporting…", "正在导出…"], ["seen just now", "刚刚活跃"], ["no tasks", "暂无任务"], ["tasks done", "项任务已完成"], ["To @all", "提及 @all"], ["(empty)", "（空）"], ["(archived)", "（已归档）"], ["(you)", "（你）"], ["Swarm views", "蜂群视图"], ["System alerts", "系统提醒"], ["Channels", "频道"], ["Filter by poster", "按发送者筛选"], ["Filter by recipient", "按提及对象筛选"], ["Filter by channel", "按频道筛选"], ["Show or hide each member's posts", "显示或隐藏各成员动态"], ["Replay", "回放"], ["Previous post", "上一条动态"], ["Next post", "下一条动态"], ["Replay position", "回放进度"], ["Graph view", "关系图视图"], ["Close preview", "关闭预览"], ["Enable sounds for agent", "启用智能体提示音"], ["Enable notifications for agent", "启用智能体通知"], ["Conversation steps", "会话详情"], ["Custom context menus", "自定义右键菜单"], ["Screen reader mode", "屏幕阅读器模式"], ["Conversation width", "会话宽度"], ["Terminal placement", "终端位置"], ["Markdown artifact width", "Markdown 产物宽度"], ["Context and quota indicator", "上下文与额度指示器"], ["Open links in", "链接打开方式"], ["Browser JavaScript execution policy", "浏览器 JavaScript 执行策略"], ["Prevent sleep", "防止休眠"], ["Keep in menu bar", "在菜单栏中保留"], ["Delete all Remote Agents data", "删除全部远程智能体数据"], ["Device name", "设备名称"], ["Model selection", "模型选择"], ["File reads", "读取文件"], ["File writes", "写入文件"], ["Read URLs", "读取网址"], ["Commands outside sandbox", "沙盒外命令"], ["MCP tools", "MCP 工具"], ["Mcp Tools", "MCP 工具"], ["Enable sandbox mode", "启用沙盒模式"], ["New conversation button", "新建会话按钮"], ["Build With Google plugins", "Build With Google 插件"], ["Manage hooks", "管理钩子"], ["Access grants", "访问授权"], ["Load older messages", "加载更早的消息"], ["Delete Permanently", "永久删除"], ["Return to Inbox", "退回收件箱"], ["No agents", "暂无智能体"], ["A nickname for identifying this application in the companion website. Changing this will restart the connection.", "用于在配套网站中识别此应用的名称，修改后会重新连接。"], ["Default uses server-managed routing and Orchestrator quota. Custom pins specific models for orchestration and execution.", "默认由服务端自动路由并使用 Orchestrator 额度；自定义可固定规划与执行模型。"], ["Run in your current workspace", "在当前工作区中运行"], ["Run in a new worktree", "在新的工作树中运行"], ["Clone current workspace into a new independent workspace", "将当前工作区克隆为新的独立工作区"], ["Folders these agents can access.", "这些智能体可访问的文件夹。"], ["Commands and files these agents can use.", "这些智能体可使用的命令与文件。"], ["Controls whether terminal commands require your approval before running.\n\nNote: A change to this setting will only apply to new messages sent to the agent. In-progress responses will use the previous setting value.", "控制终端命令在运行前是否需要你批准。\n\n注意：修改此设置仅对后续发送的新消息生效，正在进行中的回复仍沿用旧设置。"]]);
+  pairs.push(...[
+    ["Skills & Rules", "技能与规则"],
+    ["Active Skills", "已启用技能"],
+    ["Skill", "技能"],
+    ["Built In", "内置"],
+    ["Source", "来源"],
+    ["Type", "类型"],
+    ["Featured", "精选"],
+    ["Applied", "已应用"],
+    ["Readme", "说明文档"],
+    ["Commands", "命令"],
+    ["UI Plugins", "界面插件"],
+    ["UI plugins", "界面插件"],
+    ["MCP servers", "MCP 服务器"],
+    ["Context Providers", "上下文提供程序"],
+    ["Customization", "自定义项"],
+    ["Customizations views", "自定义视图"],
+    ["Copy Path", "复制路径"],
+    ["Copy Config File Path", "复制配置文件路径"],
+    ["Copied to clipboard", "已复制到剪贴板"],
+    ["Delete Skill", "删除技能"],
+    ["Deleting...", "正在删除…"],
+    ["Try again", "重试"],
+    ["Enable Recommended Skills", "启用推荐技能"],
+    ["Enable recommended skills", "启用推荐技能"],
+    ["Open skill page", "打开技能页面"],
+    ["Skill download success", "技能下载成功"],
+    ["The skill is now available", "该技能现已可用"],
+    ["Skill deletion is not available.", "暂不支持删除此技能。"],
+    ["Failed to delete skill.", "删除技能失败。"],
+    ["Failed to delete skill. Please try again.", "删除技能失败，请重试。"],
+    ["This skill came from the marketplace, so you can add it again whenever you need it.", "此技能来自插件市场，需要时随时可重新添加。"],
+    ["This cannot be undone.", "此操作无法撤销。"],
+    ["No skills available", "暂无可用技能"],
+    ["No skills or rules yet.", "暂无技能或规则。"],
+    ["No skills or rules match this filter.", "没有符合此筛选条件的技能或规则。"],
+    ["No custom agents yet.", "暂无自定义智能体。"],
+    ["No plugins available in the marketplace.", "市场中暂无可用插件。"],
+    ["No plugins match your search.", "没有匹配搜索条件的插件。"],
+    ["No apps connected yet. Connect one from Marketplace.", "尚未连接任何应用，可前往市场连接。"],
+    ["Loading customizations...", "正在加载自定义项…"],
+    ["Loading workspace customizations...", "正在加载工作区自定义项…"],
+    ["Loading available plugins...", "正在加载可用插件…"],
+    ["Browse the Marketplace", "浏览插件市场"],
+    ["Explore the plugin marketplace", "探索插件市场"],
+    ["Explore other marketplace customizations", "探索更多市场自定义项"],
+    ["Find skills, agents, and more in the Marketplace.", "在插件市场发现技能、智能体与更多扩展。"],
+    ["Find plugins - bundles of skills, agents, MCP servers, UI extensions and more, and install them in one click.", "发现集成了技能、智能体、MCP 服务器与界面扩展的插件包，支持一键安装。"],
+    ["Marketplace notice", "市场提示"],
+    ["Removed from the marketplace. Stays installed until you uninstall it.", "已从市场下架，在手动卸载前仍保留本地安装。"],
+    ["The suggested plugin isn't in the marketplace.", "推荐的插件当前不在市场中。"],
+    ["A customization failed to load", "有自定义项加载失败"],
+    ["Its customizations are now available", "其自定义项现已可用"],
+    ["Failed to load your customizations. Please try again.", "加载自定义项失败，请重试。"],
+    ["Failed to load marketplace bundles. Please try again.", "加载市场插件包失败，请重试。"],
+    ["Customization token budget exceeded. Large customizations are excluded from context.", "自定义项 Token 预算已超出，较大的自定义项已从上下文中排除。"],
+    ["Rules and customization token budgets exceeded. Large rules are demoted to path pointers and large customizations are excluded from context.", "规则与自定义项 Token 预算已超出，较大的规则已降级为路径引用，较大的自定义项已从上下文中排除。"],
+    ["Add MCP Server", "添加 MCP 服务器"],
+    ["Delete MCP Server", "删除 MCP 服务器"],
+    ["Search for MCP servers to add to your configuration", "搜索并添加 MCP 服务器到配置"],
+    ["This MCP server can no longer be configured.", "此 MCP 服务器已无法再配置。"],
+    ["Sign in required", "需要登录"],
+    ["Setup required", "需要配置"],
+    ["Starting", "启动中"],
+    ["Starting...", "正在启动…"],
+    ["Stopping...", "正在停止…"],
+    ["See more results", "查看更多结果"],
+    ["See more in Plugins", "在插件中查看更多"],
+    ["See less in Plugins", "收起插件结果"],
+    ["Side Panel Preview", "侧栏预览"],
+    ["Workspace Settings", "工作区设置"],
+    ["Connecting to language server...", "正在连接语言服务…"],
+    ["Include Jetski default customizations", "包含默认内置自定义项"],
+    ["Cleared built-in browser data", "已清除内置浏览器数据"],
+    ["Cleared built-in browser history", "已清除内置浏览器历史记录"],
+    ["No sites have cookies in the built-in browser.", "内置浏览器中暂无站点 Cookie。"],
+    ["Choose what to clear from the built-in browser. It can't be undone.", "选择要从内置浏览器清除的内容，此操作无法撤销。"],
+    ["An agent is using the built-in browser. Clearing its data signs the agent out of sites and may interrupt its task.", "有智能体正在使用内置浏览器，清除数据会退出站点登录并可能中断当前任务。"],
+    ["Cookies, site storage and cache. Signs you out of all sites in the built-in browser and reloads its open tabs.", "包含 Cookie、站点存储与缓存。清除后会退出内置浏览器中的所有站点登录并刷新打开的标签页。"],
+    ["Ask a quick question without interrupting the main conversation.", "发起侧边对话，不打断主对话。"],
+    ["Run until the specified goal is completely finished.", "持续执行，直到指定目标完全达成。"],
+    ["Compact the conversation now (summarize history to free up the context window).", "立即压缩当前会话（总结历史内容以释放上下文窗口）。"],
+    ["Run an instruction on a recurring schedule or as a one-time timer.", "按周期计划或一次性定时执行指令。"],
+    ["Invoke a browser agent for web tasks.", "调用浏览器智能体处理网页任务。"],
+    ["Plan carefully before executing a task.", "执行任务前先制定详细计划。"],
+    ["Interview me to align on a plan.", "通过交互式问答对齐方案细节。"],
+    ["Invoke a team of agents to autonomously tackle large projects.", "调用多智能体协作团队自主完成大型项目。"],
+    ["Reflect on recent successes or corrections to capture reusable skills or rules.", "复盘近期的成功经验或修正，沉淀为可复用的技能或规则。"],
+    ["Invoke the Boost multi-agent orchestrator for complex tasks.", "调用 Boost 多智能体编排器处理复杂任务。"]
+  ]);
+  pairs.push(['Sort Conversations','会话排序'],['Sort Projects','项目排序'],['Auto Pin','自动置顶'],['Archived Only','仅已归档'],['Subtitles','副标题'],['Decorations','显示项']);
+  pairs.push(
+    ["Explored file","探索文件"],
+    ["Explored files","探索文件"],
+    ["Explored artifact","探索产物"],
+    ["Explored artifacts","探索产物"],
+    ["Explored, ran command","探索并运行命令"],
+    ["Explored, ran commands","探索并运行命令"],
+    ["Explored, edited file","探索并编辑文件"],
+    ["Explored, edited files","探索并编辑文件"],
+    ["Analyzed","已分析"],
+    ["Analyzing","正在分析"],
+    ["Exploring","正在探索"],
+    ["Searching","正在搜索"],
+    ["Reading","正在读取"],
+    ["Editing","正在编辑"],
+    ["Listing","正在列出"],
+    ["Executing","正在执行"],
+    ["Executed","已执行"],
+    ["Failed to execute","执行失败"],
+    ["Failed to read","读取失败"],
+    ["Failed to edit","编辑失败"],
+    ["Scrolled","已滚动"],
+    ["Reading page","正在阅读页面"],
+    ["Read page","已阅读页面"],
+    ["Created outline","已生成大纲"],
+    ["Compacting","正在压缩上下文"],
+    ["Worked","已完成"],
+    ["Invalid tool call","无效工具调用"],
+    ["Error while editing","编辑出错"],
+    ["Error editing file","编辑文件出错"],
+    ["Error while viewing","查看出错"],
+    ["Error viewing file","查看文件出错"],
+    ["Error while editing notebook","编辑 Notebook 出错"],
+    ["Error editing notebook","编辑 Notebook 出错"],
+    ["Error while reading notebook","读取 Notebook 出错"],
+    ["Error reading notebook","读取 Notebook 出错"],
+    ["Asking","正在提问"],
+    ["Asked","已提问"],
+    ["Other (write your answer)","其他（输入你的回答）"],
+    ["Skip","跳过"],
+    ["Full View","完整视图"],
+    ["Subagent Conversation","子智能体会话"],
+    ["This subagent was killed and can no longer be messaged.","此子智能体已终止，无法继续发送消息。"],
+    ["Messaging subagents isn't supported in remote conversations yet.","远程会话暂不支持向子智能体发送消息。"],
+    ["Side Question:","侧边对话："],
+    ["Help:","帮助："],
+    ["just now","刚刚"],
+    ["Just now","刚刚"],
+    ["Hide earlier steps","收起更早步骤"],
+    ["Loading browser steps…","正在加载浏览器步骤…"],
+    ["Browser task still running…","浏览器任务仍在运行…"],
+    ["No browser steps recorded","暂无浏览器步骤记录"],
+    ["Message subagent, @ to mention, / for actions","向子智能体发消息，@ 引用，/ 选择操作"],
+    ["Message subagent, @ to mention","向子智能体发消息，@ 引用"],
+    ["Waiting for subagent","等待子智能体"],
+    ["Waiting for subagents","等待子智能体"],
+    ["Waiting for your approval","等待你的批准"],
+    ["Waiting for approval","等待批准"],
+    ["Waiting for user input","等待用户输入"],
+    ["Waiting for your input","等待你的输入"],
+    ["Waiting for command completion","等待命令执行完成"],
+    ["Waiting for tool permission approval","等待工具权限批准"],
+    ["Waiting for approval to grant administrator access","等待批准授予管理员权限"],
+    ["Waiting for response...","等待响应…"],
+    ["Waiting for response…","等待响应…"],
+    ["Waiting for you to finish signing in","等待你完成登录…"],
+    ["Waiting for you to finish signing in…","等待你完成登录…"],
+    ["Waiting for the agents","等待智能体响应"],
+    ["Waiting for video","等待视频"],
+    ["No background tasks","暂无后台任务"],
+    ["background work","后台任务"],
+    ["Sends after background work finishes.","后台任务完成后发送。"],
+    ["Sends after agent finishes working.","智能体完成工作后发送。"],
+    ["Running command","正在运行命令"],
+    ["Ran command","已运行命令"],
+    ["Ran commands","已运行命令"],
+    ["Edited file","已编辑文件"],
+    ["Edited files","已编辑文件"],
+    ["Edited artifact","已编辑产物"],
+    ["Edited artifacts","已编辑产物"],
+    ["Editing file","正在编辑文件"],
+    ["Editing files","正在编辑文件"],
+    ["Editing artifact","正在编辑产物"],
+    ["Editing artifacts","正在编辑产物"],
+    ["Read file","已读取文件"],
+    ["Read files","已读取文件"],
+    ["Searched files","已搜索文件"],
+    ["Hook Json PreInvocation","前置调用钩子"],
+    ["Hook Json PostInvocation","后置调用钩子"],
+    ["Hook Json PreToolUse","工具前置钩子"],
+    ["Hook Json PostToolUse","工具后置钩子"],
+    ["Hook Json Stop","停止钩子"],
+    ["PreInvocation","前置调用钩子"],
+    ["PostInvocation","后置调用钩子"],
+    ["PreToolUse","工具前置钩子"],
+    ["PostToolUse","工具后置钩子"],
+    ["Thinking…","正在思考…"],
+    ["Terminals","终端"],
+    ["Proceeded with","已继续执行"],
+    ["Auto-proceeded with","已自动继续"],
+    ["Loading Antigravity...","正在加载 Antigravity…"],
+    ["Loading Antigravity…","正在加载 Antigravity…"],
+    ["Delete Side Question","删除侧边对话"],
+    ["Open search in external browser","在外部浏览器中打开搜索"],
+    ["Leaving Soon","即将下线"],
+    ["Leaving soon","即将下线"],
+    ["Scan the code to open this device in Remote Control, or","扫码在远程控制中打开此设备，或"],
+    ["copy link","复制链接"],
+    ["Legacy Dark","经典深色"],
+    ["Legacy Light","经典浅色"],
+    ["Search shortcuts…","搜索快捷键…"],
+    ["Search shortcuts","搜索快捷键"],
+    ["Enable telemetry","启用遥测"],
+    ["Marketing emails","营销邮件"],
+    ["Your plan:","当前套餐："],
+    ["Your plan","当前套餐"],
+    ["Download location","下载位置"],
+    ["Browsing history","浏览历史"],
+    ["Browser actuation rules","浏览器操作规则"],
+    ["Enable AI credit overages","允许超额使用 AI 积分"],
+    ["Enable browser agent","启用浏览器智能体"],
+    ["Permission preset","权限预设"],
+    ["Security preset","安全预设"],
+    ["Tool permissions","工具权限"],
+    ["Terminal commands","终端命令"],
+    ["Browsing data","浏览数据"],
+    ["Announcements and tips","公告与提示"],
+    ["Recent files","最近文件"],
+    ["File access rules","文件访问规则"],
+    ["Network access rules","网络访问规则"],
+    ["Plugin permissions","插件权限"],
+    ["Browser actions","浏览器操作"],
+    ["Browser downloads","浏览器下载"],
+    ["Unsandboxed commands","沙盒外命令"],
+    ["Admin escalation","管理员提权"],
+    ["Runs on this computer","在本机运行"],
+    ["Runs remotely","在远程运行"],
+    ["Current workspace","当前工作区"],
+    ["No conversations yet","暂无会话"],
+    ["No longer available","已不可用"],
+    ["Not signed in","未登录"],
+    ["Archive project","归档项目"],
+    ["Open project settings","打开项目设置"],
+    ["Search projects...","搜索项目…"],
+    ["Search for conversations...","搜索会话…"],
+    ["Search for commands...","搜索命令…"],
+    ["Search file contents...","搜索文件内容…"],
+    ["Filter files...","筛选文件…"],
+    ["Search sites...","搜索站点…"],
+    ["Search MCP servers by name","按名称搜索 MCP 服务器"],
+    ["Search branches","搜索分支"],
+    ["Find","查找"],
+    ["Write a comment...","输入评论…"],
+    ["Type your own answer","输入你的回答"],
+    ["Enter device name...","输入设备名称…"],
+    ["Enter project name...","输入项目名称…"],
+    ["(Optional) Tell us more or type your reason...","（可选）补充说明或输入原因…"],
+    ["Files Changed","已更改文件"],
+    ["No file changes","暂无文件更改"],
+    ["Open Diff","打开差异"],
+    ["Toggle file diff","切换文件差异"],
+    ["Revert file changes","还原文件更改"],
+    ["No subagents","暂无子智能体"],
+    ["Stop subagent","停止子智能体"],
+    ["Stop Subagent","停止子智能体"],
+    ["Stop All Subagents","停止全部子智能体"],
+    ["Cancel Task","取消任务"],
+    ["Cancel All Tasks","取消全部任务"],
+    ["Cancel Step","取消此步"],
+    ["Cancel step","取消此步"],
+    ["Cancel Sending Message","取消发送消息"],
+    ["No active terminals","暂无活跃终端"],
+    ["New Terminal","新建终端"],
+    ["Open Terminal","打开终端"],
+    ["Delete Terminal","删除终端"],
+    ["Standalone Terminals","独立终端"],
+    ["Insert in Terminal","插入到终端"],
+    ["Insert in terminal","插入到终端"],
+    ["Proceed with Plan","按计划执行"],
+    ["Blocked, needs input","已阻塞，需要输入"],
+    ["Still running","仍在运行"],
+    ["Nothing is running right now","当前没有运行中的任务"],
+    ["Browser steps","浏览器步骤"],
+    ["Launching the browser...","正在启动浏览器…"],
+    ["Copy Message","复制消息"],
+    ["Copy Command","复制命令"],
+    ["Copy command","复制命令"],
+    ["Copy File Path","复制文件路径"],
+    ["Copy File Name","复制文件名"],
+    ["Copy Content","复制内容"],
+    ["Undo to Here","撤回到此处"],
+    ["Good Response","有帮助"],
+    ["Bad Response","无帮助"],
+    ["Only Automations","仅自动化"],
+    ["Show in Sidebar","在侧栏显示"],
+    ["Pin / Unpin Conversation","置顶 / 取消置顶会话"],
+    ["Open in Antigravity IDE","在 Antigravity IDE 中打开"],
+    ["Open in New Window","在新窗口中打开"],
+    ["Open in side pane","在侧栏打开"],
+    ["Open with","打开方式"],
+    ["Reopen Locally","在本地重新打开"],
+    ["Close (Esc)","关闭 (Esc)"],
+    ["Reset zoom (0)","重置缩放 (0)"],
+    ["Zoom in (+)","放大 (+)"],
+    ["Zoom out (-)","缩小 (-)"],
+    ["Reset All to Defaults","全部恢复默认"],
+    ["Reset all shortcuts to defaults","将所有快捷键恢复默认"],
+    ["Submit Prompt (Alternate to Enter)","提交提问（Enter 替代键）"],
+    ["Dismiss","忽略"],
+    ["Decline","拒绝"],
+    ["Create","创建"],
+    ["Creating...","正在创建…"],
+    ["Refreshing...","正在刷新…"],
+    ["Stopped","已停止"],
+    ["Ready","就绪"],
+    ["Unknown","未知"],
+    ["Add Context","添加上下文"],
+    ["Upload Files","上传文件"],
+    ["Download File","下载文件"],
+    ["Download","下载"],
+    ["Connectors","连接器"],
+    ["Open MCP Config","打开 MCP 配置"],
+    ["View MCP servers","查看 MCP 服务器"],
+    ["Loading MCP servers...","正在加载 MCP 服务器…"],
+    ["There are no customizations enabled.","暂无已启用的自定义项。"],
+    ["No Plugins Available","暂无可用插件"],
+    ["No plugins available","暂无可用插件"],
+    ["Plugin details","插件详情"],
+    ["Plugin metadata","插件元数据"],
+    ["Plugin update required","插件需要更新"],
+    ["App update required","应用需要更新"],
+    ["Currently installed","当前已安装"],
+    ["Allowed by you","由你允许"],
+    ["Included with plugin","随插件附带"],
+    ["These come with the plugin and can't be revoked.","这些权限随插件附带，无法撤销。"],
+    ["Agent Hooks Configuration","智能体钩子配置"],
+    ["Add Hook Card","添加钩子卡片"],
+    ["Delete Hook","删除钩子"],
+    ["Delete Handler","删除处理程序"],
+    ["New hook name","新钩子名称"],
+    ["All tools (*)","全部工具 (*)"],
+    ["Sign in needed","需要登录"],
+    ["Sign-in required","需要登录"],
+    ["Set up authentication","配置身份验证"],
+    ["Enable this plugin to manage its accounts.","启用此插件以管理其账号。"],
+    ["Enable the plugin to sign in.","启用插件以登录。"],
+    ["Finish signing in in your browser.","请在浏览器中完成登录。"],
+    ["Restart sign-in","重新登录"],
+    ["Signed-in accounts","已登录账号"],
+    ["Ask the agent to diagnose and fix this server","让智能体诊断并修复此服务器"],
+    ["MCP error","MCP 错误"],
+    ["MCP server error","MCP 服务器错误"],
+    ["File Explorer","文件资源管理器"],
+    ["Agent Edits","智能体编辑"],
+    ["Branch Changes","分支更改"],
+    ["Previous Worktrees","历史工作树"],
+    ["Comments","评论"],
+    ["Comment","评论"],
+    ["Artifact Comments","产物评论"],
+    ["File Diff Comments","差异评论"],
+    ["File Comments","文件评论"],
+    ["Artifact updated by agent","产物已由智能体更新"],
+    ["Review contents","审查内容"],
+    ["Select text in the artifact to add a comment","选中产物中的文本以添加评论"],
+    ["Drag to select a region to comment","拖动框选区域以添加评论"],
+    ["Export as PDF","导出为 PDF"],
+    ["Preview","预览"],
+    ["Preview unavailable","暂无法预览"],
+    ["Web Preview","网页预览"],
+    ["Loading media...","正在加载媒体…"],
+    ["Loading logs...","正在加载日志…"],
+    ["Task Logs","任务日志"],
+    ["Conversation Log","会话日志"],
+    ["Empty log","空日志"],
+    ["What should the agent do on each run?","智能体每次运行时应执行什么任务？"],
+    ["Prompt to run when triggered...","触发时执行的提示词…"],
+    ["Create a project first.","请先创建一个项目。"],
+    ["No project selected","未选择项目"],
+    ["Last 7 days","最近 7 天"],
+    ["Purchase Credits","购买积分"],
+    ["See Plans","查看套餐"],
+    ["Enable Overages","启用超额抵扣"],
+    ["Select Model","选择模型"],
+    ["Select another model","选择其他模型"],
+    ["Log back in","重新登录"],
+    ["Complete verification","完成验证"],
+    ["Continue with different account","切换其他账号继续"],
+    ["Having trouble signing in?","登录遇到问题？"],
+    ["Show Remote Control QR code","显示远程控制二维码"],
+    ["Remote Control link","远程控制链接"],
+    ["Continue your work from another device with Remote Control. Scan the QR code or open the link below.","使用远程控制从其他设备继续工作，扫描二维码或打开下方链接。"],
+    ["No keyboard shortcuts found matching your filter.","未找到匹配的快捷键。"],
+    ["No matching results","无匹配结果"],
+    ["No matching resources found.","未找到匹配资源。"],
+    ["No files or folders found","未找到文件或文件夹"],
+    ["Clear cookies and site data","清除 Cookie 与站点数据"],
+    ["Clear search","清除搜索"],
+    ["Clear filter","清除筛选"],
+    ["Failed to rename conversation","重命名会话失败"],
+    ["Failed to delete conversation","删除会话失败"],
+    ["Failed to stop conversation","停止会话失败"],
+    ["Failed to start conversation","启动会话失败"],
+    ["Failed to revert conversation","撤回会话失败"],
+    ["Failed to create terminal","创建终端失败"],
+    ["Failed to read file content","读取文件内容失败"],
+    ["Failed to fetch diffs","获取差异失败"],
+    ["Failed to load image","加载图片失败"],
+    ["Failed to export artifact","导出产物失败"],
+    ["Failed to proceed","继续执行失败"],
+    ["Running processes are killed. This cannot be undone.","运行中的进程将被终止，此操作无法撤销。"],
+    ["This chat's environment is paused","当前聊天的运行环境已暂停"],
+    ["File not found","未找到文件"],
+    ["Task not found","未找到任务"],
+    ["Setup script failed.","前置脚本执行失败。"],
+    ["Couldn't delete your data. Try again.","无法删除你的数据，请重试。"],
+    ["Couldn't clear browsing data. Try again.","无法清除浏览数据，请重试。"],
+    ["Couldn't search files","无法搜索文件"],
+    ["Couldn't mark conversations as read","无法将会话标为已读"],
+    ["The main conversation's input isn't available right now.","主对话输入框当前不可用。"],
+    ["Narrow","窄"],
+    ["Wide","宽"],
+    ["Fill","铺满"],
+    ["Modify permissions for file, terminal, and MCP tools.","修改文件、终端和 MCP 工具的权限。"],
+    ["Modify permissions for file and terminal tools.","修改文件和终端工具的权限。"],
+    ["Manage project folders and settings.","管理项目文件夹与设置。"],
+    ["Folders","文件夹"],
+    ["Add Folder","添加文件夹"],
+    ["Describe the bug you encountered...","描述你遇到的问题…"],
+    ["Please list the steps to reproduce the issue","请列出复现此问题的步骤"],
+    ["Describe the feature you would like to see...","描述你希望新增的功能…"],
+    ["Describe your auth or billing issue...","描述你遇到的登录或账单问题…"],
+    ["Describe your Remote Control issue...","描述你遇到的远程控制问题…"],
+    ["Enter your feedback here...","在此输入你的反馈…"],
+    ["For any feedback that does not fit into the above categories.","适用于不属于上述分类的其他反馈。"],
+    ["Start Voice mode","开启语音模式"],
+    ["End Voice mode","结束语音模式"],
+    ["Send Message","发送消息"],
+    ["Queue Message","排队发送"],
+    ["Send Now","立即发送"],
+    ["Send","发送"],
+    ["Send reply","发送回复"],
+    ["Record Audio","录制语音"],
+    ["Stop Recording","停止录制"],
+    ["Stop Recording and Send","停止录制并发送"],
+    ["Recording","正在录制"],
+    ["Cancel recording","取消录制"],
+    ["Remove audio","移除语音"],
+    ["Stop transcription","停止转写"],
+    ["Add context","添加上下文"],
+    ["Voice dictation unavailable","语音听写不可用"],
+    ["Voice speed","语音语速"],
+    ["Voice volume","语音音量"],
+    ["Voices","音色"],
+    ["Available dictation languages","可选听写语言"],
+    ["Selected dictation languages","已选听写语言"],
+    ["Dictation language options","听写语言选项"],
+    ["Dismiss microphone warning","关闭麦克风提示"],
+    ["Close Panel","关闭面板"],
+    ["Close Sidebar","关闭侧栏"],
+    ["Customize Sidebar","自定义侧栏"],
+    ["Toggle sidebar","切换侧栏"],
+    ["Toggle Terminal Panel","切换终端面板"],
+    ["Kill Terminal","终止终端"],
+    ["Stop Editing","停止编辑"],
+    ["Stop execution","停止执行"],
+    ["Stop this agent","停止此智能体"],
+    ["Failed to stop agent","停止智能体失败"],
+    ["Failed to send queued message","发送排队消息失败"],
+    ["Failed to send side question","发送侧边对话失败"],
+    ["Couldn't edit queued message","无法编辑排队消息"],
+    ["Fork","分支"],
+    ["Close split view and go to forked conversation","关闭拆分视图并前往分支会话"],
+    ["Click to copy URL","点击复制网址"],
+    ["Copy full URL to clipboard","复制完整网址到剪贴板"],
+    ["View or edit comment","查看或编辑评论"],
+    ["Cancel questionnaire","取消问卷"],
+    ["Message this chat","在此会话发送消息"],
+    ["No branches","暂无分支"],
+    ["Edit Model","编辑模型"],
+    ["Edit task title","编辑任务标题"],
+    ["Edit permission target","编辑权限目标"],
+    ["At mention code block","@ 引用代码块"],
+    ["Resize side question panel","调整侧边对话面板大小"],
+    ["Resize terminal panes","调整终端窗格大小"],
+    ["Comprehensive guide and reference for the Antigravity Customization System. Use to explain how customizations work, their loading priority, discovery mechanisms, and to guide the creation of skills, rules, plugins, hooks, and MCP servers.","Antigravity 自定义系统的完整指南与参考手册。用于说明自定义项的工作原理、加载优先级与发现机制，并指导创建技能、规则、插件、钩子和 MCP 服务器。"],
+    ["Provides a comprehensive guide, quick reference, and sitemap for Google Antigravity (AGY), including the Antigravity CLI (agy), Antigravity 2.0, Antigravity IDE, Python SDK, slash commands, keybindings, and customizations (skills, rules, MCP, sidecars). Activate this skill when the user asks questions about how to use, configure, or customize Antigravity, AGY, the agy CLI, the Antigravity IDE, or Antigravity 2.0.","提供 Google Antigravity (AGY) 的完整指南、速查手册与目录索引，涵盖 Antigravity CLI (agy)、Antigravity 2.0、Antigravity IDE、Python SDK、斜杠命令、快捷键和自定义配置（技能、规则、MCP、伴生进程）。当用户询问如何使用、配置或自定义 Antigravity 时激活。"],
+    ["Interactive guide to design and create a scheduled background automation. Use this skill when the user wants to create an automated or recurring scheduled task (e.g. \"summarize my emails every morning\", \"every Monday send me a to-do list\"). Also triggered by the /automation slash command.","用于设计与创建后台定时自动化的交互式指南。当用户希望创建自动或周期性定时任务（如每天早上汇总邮件、每周一发送待办清单）时使用，也可通过 /automation 斜杠命令触发。"],
+    ["Manage local Antigravity conversations programmatically over HTTP+JSON: create a new conversation (with an optional initial prompt), list conversations, read conversation metadata and run state, rename, archive, pin, star, tag, or group conversations, and delete conversations. Use when the user asks to list, rename, pin, star, archive, delete, or start conversations, including the current one, or when a script, plugin, or automation needs to manage conversations outside of subagent tool calls.","通过 HTTP+JSON 以编程方式管理本地 Antigravity 会话：新建会话、列出会话、读取元数据与运行状态、重命名、归档、置顶、星标、打标签、分组及删除会话。适用于通过脚本、插件、自动化或直接指令管理会话。"],
+    ["How to render rich interactive HTML widgets inline in the chat or as standalone artifacts. Use this skill when you want to show the user diagrams, data visualizations, interactive controls, educational walkthroughs, or any rich visual content beyond plain text and markdown.","指导如何在对话内联或独立产物中渲染交互式 HTML 组件。适用于向用户展示图表、数据可视化、交互控件、教学演示等超出纯文本和 Markdown 表现力的富视觉内容。"],
+    ["Build, package, and debug MCP Apps for Antigravity: MCP server tools whose results render as interactive UI in the conversation, in the side pane, or full-page from the sidebar. Use when adding a UI to an MCP tool, building or theming the app itself, packaging it as a plugin, or debugging an app that doesn't render or behave as expected.","面向 Antigravity 构建、打包与调试 MCP 应用：让 MCP 工具结果在对话、侧边栏或全页视图中呈现为交互式界面。适用于为 MCP 工具添加 UI、定制主题、打包插件或排查渲染异常。"],
+    ["Migrates the user's MCP servers, skills, slash commands, subagents, and instruction files from other coding agents (Claude Code, Codex, Cursor, Gemini CLI) into one new Antigravity plugin. Use when the user wants to bring over, import, or migrate their setup or config from another agent or tool. Don't use for installing Marketplace plugins or authoring a new plugin from scratch (use the plugin skill).","将其他编程智能体（Claude Code、Codex、Cursor、Gemini CLI）中的 MCP 服务器、技能、斜杠命令、子智能体与指令文件迁移为一个新的 Antigravity 插件。不适用于安装市场插件或从零开发插件。"],
+    ["Automatically migrate legacy workflows to modern skills across global and workspace configurations. Scans for existing workflows, creates target SKILL.md files, and safely archives old workflow files.","自动将全局和工作区配置中的旧版工作流迁移为新版技能。扫描现有工作流，生成对应的 SKILL.md 文件，并安全归档旧工作流文件。"],
+    ["(Preview & Quota Heavy) Run a swarm: several agents working in parallel on one task, each in its own conversation, collaborating through a shared message board. Use when the work splits into pieces that can be done at the same time, or when a second pair of eyes should check the first pair's work.","（预览版，额度消耗较高）运行多智能体蜂群：多个智能体在各自会话中并行处理同一任务，并通过共享留言板协作。适用于可拆分为并行子任务或需要交叉复核的工作。"],
+    ["Guidelines for interacting with GitHub and request permissions from the user when commands fail due to restrictions in the agent environment.","与 GitHub 交互的规范指南，并在命令因智能体环境限制失败时向用户请求权限。"],
+    ["How to manage and create plugins — namespaced bundles of skills, agents, rules, MCP servers and hooks that install, enable and disable as a single unit. Use this skill when the user wants to enable, disable, install or uninstall a plugin, when they want to create a new plugin, or when a new customization should be packaged into a plugin rather than left loose. Also triggered by the /plugin slash command. Don't use for the underlying customization system itself — discovery roots, loading priority, or authoring a standalone skill, agent, rule, hook or MCP server outside a plugin; see the customizations guide skill for those.","指导如何管理与创建插件（将技能、智能体、规则、MCP 服务器和钩子打包为统一安装与启停的命名空间单元）。适用于安装、卸载、启停或新建插件，也可通过 /plugin 斜杠命令触发。"],
+    ["How to write and run a dynamic workflow script with the `run_workflow` tool: a Python script that orchestrates many agents with `agent`, `parallel`, `pipeline`, and `phase`. Use when a task splits into many independent or staged pieces of agent work (fan out over files, modules, bugs, or review angles, then aggregate), or when the user asks for a workflow. Don't use for a single delegated task (use a subagent) or for legacy workflow files (see migrate-workflows).","指导如何使用 run_workflow 工具编写并运行动态工作流脚本：通过 Python 中的 agent、parallel、pipeline 和 phase 编排多个智能体执行扇出或分阶段任务。不适用于单一委派或旧版工作流。"],
+    ["ONLY for the native-swarm worker whose brief says it is the monitor. On a timer, it checks whether the whole swarm has stalled and calls on the one member who can unstick it. Coordinators and other workers: do not load this.","仅限任务简报指定为监控员的原生蜂群成员使用。按定时器检查蜂群是否卡滞并唤醒可解堵的成员。协调者与其他成员请勿加载。"],
+    ["ONLY for the native-swarm worker whose brief says it is the narrator. It watches the board and keeps the facts behind the user's Overview (view.json) current. Coordinators and other workers: do not load this.","仅限任务简报指定为旁白员的原生蜂群成员使用。持续监听留言板并实时更新用户概览（view.json）的数据。协调者与其他成员请勿加载。"],
+    ["ONLY for the coordinator of an active /swarm session. What the coordinator writes so the Swarm UI's Overview can show the swarm's goal, its groups of work and a screenshot timeline; load it before you brief and add the first workers. Outside /swarm, do not load this.","仅限活跃 /swarm 会话的协调者使用。规范协调者写入的内容，以便蜂群界面概览展示目标、任务分组与截图时间线；非 /swarm 会话请勿加载。"],
+    ["Discover UI plugin panels relevant to the current task and surface a one-click pill in chat to open (toggle) them in the side pane. Use when a running UI plugin's panel would help with what the user is doing, or right after the user enables a new UI plugin pane and a shortcut to open it is handy.","发现与当前任务相关的 UI 插件面板，并在对话中提供一键胶囊按钮以在侧边栏打开或切换。适用于已运行 UI 插件可辅助当前工作或刚启用新面板时。"],
+    ["Create a new conversation from the complete local transcript through a selected turn.","基于截至指定轮次的完整本地会话记录创建新会话分支。"]
+  );
+  const zh=new Map(pairs),en=new Map();for(const [a,b]of pairs)if(!en.has(b))en.set(b,a);
+  const menuOnlyLabels=new Set(['Project','Sort Conversations','Sort Projects','Auto Pin','Archived Only','Subtitles','Decorations']);
+  const controlOnlyLabels=new Set(['Narrow','Wide','Fill','Find','Skip','Create','Ready','Unknown','Preview','Send','Fork','Folders','Download','Dismiss','Decline','Comment','Comments','Connectors','Voices']);
+  let previousCustom, custom = new Map();
+  function customText(key) {
+    const entries = globalThis.__agyCustomI18n;
+    if (entries !== previousCustom) {
+      previousCustom = entries;
+      custom = new Map(Array.isArray(entries) ? entries : Object.entries(entries || {}));
+    }
+    return custom.get(key);
+  }
+  function nativeTranslation(text){
+    if(zh.has(text))return zh.get(text);
+    if(customText(text))return customText(text);
+    if(/^overview\s+.\s+from the narrator['’]s notes$/i.test(text))return '概览 - 来自旁白笔记';
+    const plan=text.match(/^Your [Pp]lan:\s*(.+)$/);if(plan)return `当前套餐：${plan[1]}`;
+    const credits=text.match(/^Available AI Credits:\s*(.+)$/i);if(credits)return `可用 AI 积分：${credits[1]}`;
+    const shared=text.match(/^Shared with:\s*(.+)$/i);if(shared)return `共享额度模型：${shared[1]}`;
+    const toolsCount=text.match(/^(\d+)\s+tools?$/i);if(toolsCount)return `${toolsCount[1]} 个工具`;
+    const showMoreCount=text.match(/^Show more \((\d+)\)$/i);if(showMoreCount)return `显示更多 (${showMoreCount[1]})`;
+    const thoughtFor=text.match(/^Thought for (\d+)s$/);if(thoughtFor)return `思考了 ${thoughtFor[1]} 秒`;
+    const thoughtLong=text.match(/^Thought for (\d+)m(?:\s+(\d+)s)?$/);if(thoughtLong)return `思考了 ${thoughtLong[1]} 分${thoughtLong[2]?` ${thoughtLong[2]} 秒`:''}`;
+    const thinkingFor=text.match(/^Thinking for (\d+)s$/);if(thinkingFor)return `正在思考 ${thinkingFor[1]} 秒`;
+    const thinkingLong=text.match(/^Thinking for (\d+)m(?:\s+(\d+)s)?$/);if(thinkingLong)return `正在思考 ${thinkingLong[1]} 分${thinkingLong[2]?` ${thinkingLong[2]} 秒`:''}`;
+    const stepOf=text.match(/^Step (\d+) of (\d+)$/);if(stepOf)return `第 ${stepOf[1]} / ${stepOf[2]} 步`;
+    let m;
+    if((m=text.match(/^(.+?)\.\s*Leaving on ([A-Za-z]+\s+\d+(?:,\s*\d{4})?)\.?$/))){const base=zh.get(m[1])||zh.get(`${m[1]}.`);if(base)return `${base.replace(/[。.]$/,'')}。将于 ${m[2]} 下线。`;}
+    if((m=text.match(/^Leaving on ([A-Za-z]+\s+\d+(?:,\s*\d{4})?)\.?$/)))return `将于 ${m[1]} 下线。`;
+    if((m=text.match(/^Show (\d+) earlier steps?$/)))return `显示更早的 ${m[1]} 步`;
+    if((m=text.match(/^(\d+)\s+results?$/)))return `${m[1]} 条结果`;
+    if((m=text.match(/^(\d+)\s+questions?$/)))return `${m[1]} 个问题`;
+    if((m=text.match(/^Show (\d+) more$/)))return `显示其余 ${m[1]} 项`;
+    if((m=text.match(/^Showing latest (\d+) browser steps?$/)))return `显示最近 ${m[1]} 个浏览器步骤`;
+    if((m=text.match(/^(\d+)\s+browser steps?$/)))return `${m[1]} 个浏览器步骤`;
+    if((m=text.match(/^Explored (\d+) files?$/)))return `探索了 ${m[1]} 个文件`;
+    if((m=text.match(/^Explored (\d+) artifacts?$/)))return `探索了 ${m[1]} 个产物`;
+    if((m=text.match(/^Analyzed (\d+) files?$/)))return `已分析 ${m[1]} 个文件`;
+    if((m=text.match(/^Edited (\d+) files?$/)))return `已编辑 ${m[1]} 个文件`;
+    if((m=text.match(/^Edited (\d+) artifacts?$/)))return `已编辑 ${m[1]} 个产物`;
+    if((m=text.match(/^Ran (\d+) commands?$/)))return `已运行 ${m[1]} 条命令`;
+    if((m=text.match(/^Read (\d+) files?$/)))return `已读取 ${m[1]} 个文件`;
+    if((m=text.match(/^Searched (\d+) files?$/)))return `已搜索 ${m[1]} 个文件`;
+    if((m=text.match(/^Waiting for (\d+) timers?$/)))return `等待 ${m[1]} 个计时器`;
+    if((m=text.match(/^(\d+) subagents? running$/)))return `${m[1]} 个子智能体运行中`;
+    if((m=text.match(/^(\d+) background tasks? running$/)))return `${m[1]} 个后台任务运行中`;
+    if((m=text.match(/^Swarm Worker \((.+)\)$/)))return `蜂群成员 (${m[1]})`;
+    if((m=text.match(/^Worked for ([0-9a-zA-Z\s<>]+?)(?:\s*[\u00b7\u2022]\s*(\d+)\s+(updates?|steps?))?$/))){const dur=m[1].trim().replace(/(\d+)\s*h\b/g,'$1小时').replace(/(\d+)\s*m\b/g,'$1分').replace(/(\d+)\s*s\b/g,'$1秒').replace(/(小时|分)\s+(?=\d)/g,'$1');return `用时 ${dur}${m[2]?(m[3].startsWith('step')?` ${m[2]} 步`:` ${m[2]} 条进度`):''}`;}
+    if((m=text.match(/^(?:[\u00b7\u2022]\s*)?(\d+)\s+updates?$/)))return `${m[1]} 条进度`;
+    if((m=text.match(/^(?:[\u00b7\u2022]\s*)?(\d+)\s+steps?$/)))return `${m[1]} 步`;
+    if((m=text.match(/^(\d+)\/(\d+)\s+steps?$/)))return `${m[1]}/${m[2]} 步`;
+    if((m=text.match(/^Yes, allow downloads from (.+) for this run$/)))return `是，本次允许从 ${m[1]} 下载`;
+    if((m=text.match(/^Yes, allow downloads from (.+) in this conversation$/)))return `是，在本会话中允许从 ${m[1]} 下载`;
+    if((m=text.match(/^Yes, always allow downloads from (.+)$/)))return `是，始终允许从 ${m[1]} 下载`;
+    if((m=text.match(/^Yes, and always allow '(.+)' in this conversation$/)))return `是，并在本会话中始终允许 '${m[1]}'`;
+    if((m=text.match(/^Yes, and always allow '(.+)'$/)))return `是，并始终允许 '${m[1]}'`;
+    if((m=text.match(/^Yes, save rule for '(.+)' in this conversation$/)))return `是，在本会话中为 '${m[1]}' 保存规则`;
+    if((m=text.match(/^Yes, save rule for '(.+)' globally$/)))return `是，全局为 '${m[1]}' 保存规则`;
+    if((m=text.match(/^Yes, allow (.+) in this conversation$/)))return `是，在本会话中允许 ${m[1]}`;
+    if((m=text.match(/^Yes, always allow (.+)$/)))return `是，始终允许 ${m[1]}`;
+    const quota=text.match(/^You have used some of your (weekly|5-hour) limit, it will fully refresh in (.+)\.$/);if(quota){const duration=quota[2].replace(/(\d+) days?/g,'$1 天').replace(/(\d+) hours?/g,'$1 小时').replace(/(\d+) minutes?/g,'$1 分钟').replace(/(\d+) seconds?/g,'$1 秒').replace(/,\s*| and /g,' ');return `${quota[1]==='weekly'?'周额度':'5 小时额度'}将在 ${duration}后重置。`;}
+    const projects=text.match(/^(\d+) projects?$/);if(projects)return `${projects[1]} 个项目`;
+    const breakdown=text.match(/^Show (\d+) breakdowns?$/);if(breakdown)return `显示 ${breakdown[1]} 项明细`;
+    const feedback=text.match(/^Send feedback as (.+)$/);if(feedback)return `以 ${feedback[1]} 提交反馈`;
+    const seeAll=text.match(/^See all \((\d+)\)$/i);if(seeAll)return `查看全部 (${seeAll[1]})`;
+    const filesChanged=text.match(/^(\d+) Files? With Changes$/);if(filesChanged)return `${filesChanged[1]} 个文件有更改`;
+    const filesChangedInline=text.match(/^(\d+) files? changed$/i);if(filesChangedInline)return `${filesChangedInline[1]} 个文件已更改`;
+    const pctLeft=text.match(/^(\d+(?:\.\d+)?)%\s+left$/i);if(pctLeft)return `剩余 ${pctLeft[1]}%`;
+    const resetsIn=text.match(/^Resets in (.+)$/);if(resetsIn){const dur=resetsIn[1].replace(/(\d+)\s*d\b/g,'$1 天').replace(/(\d+)\s*h\b/g,'$1 小时').replace(/(\d+)\s*m\b/g,'$1 分钟').replace(/(\d+)\s*s\b/g,'$1 秒').replace(/(\d+)\s*days?/g,'$1 天').replace(/(\d+)\s*hours?/g,'$1 小时').replace(/(\d+)\s*minutes?/g,'$1 分钟').replace(/(\d+)\s*seconds?/g,'$1 秒').replace(/\s+/g,' ').trim();return `${dur}后重置`;}
+    if((m=text.match(/^(\d+)\s+posts?$/)))return `${m[1]} 条动态`;
+    if((m=text.match(/^(\d+)\s+members?$/)))return `${m[1]} 名成员`;
+    if((m=text.match(/^(\d+)\s+frames?$/)))return `${m[1]} 帧`;
+    if((m=text.match(/^(\d+) of (\d+) tasks done$/)))return `已完成 ${m[1]} / ${m[2]} 项任务`;
+    if((m=text.match(/^(\d+) of (\d+) done$/)))return `已完成 ${m[1]} / ${m[2]}`;
+    if((m=text.match(/^(\d+) of (\d+)$/)))return `${m[1]} / ${m[2]}`;
+    if((m=text.match(/^\+(\d+) more$/)))return `另有 ${m[1]} 项`;
+    if((m=text.match(/^Waiting on @(.+)$/)))return `等待 @${m[1]}`;
+    if((m=text.match(/^Waiting on (\d+)$/)))return `等待 ${m[1]} 位成员`;
+    if((m=text.match(/^Working for @(.+)$/)))return `正为 @${m[1]} 处理`;
+    if((m=text.match(/^@([^\s]+) ran out of quota$/)))return `@${m[1]} 额度已耗尽`;
+    if((m=text.match(/^@([^\s]+) looks stuck$/)))return `@${m[1]} 疑似卡住`;
+    if((m=text.match(/^@([^\s]+) hit an error$/)))return `@${m[1]} 发生错误`;
+    if((m=text.match(/^From ([a-zA-Z0-9_@.-]+)$/)))return `来自 ${m[1]}`;
+    if((m=text.match(/^To ([a-zA-Z0-9_@.-]+)$/)))return `提及 ${m[1]}`;
+    if((m=text.match(/^Open @([a-zA-Z0-9_.-]+)$/)))return `打开 @${m[1]}`;
+    if((m=text.match(/^Go to #(\d+) on the Board$/)))return `在讨论板查看 #${m[1]}`;
+    if((m=text.match(/^Go to #(\d+) \((.+)\)$/)))return `跳转到 #${m[1]}（${m[2]}）`;
+    if((m=text.match(/^Go to #(\d+)$/)))return `跳转到 #${m[1]}`;
+    if((m=text.match(/^Everyone in #(.+)$/)))return `#${m[1]} 频道全部成员`;
+    if((m=text.match(/^#(.+) is archived: this addresses nobody$/)))return `#${m[1]} 已归档：此提及不会通知任何人`;
+    if((m=text.match(/^Exporting (\d+)%$/)))return `正在导出 ${m[1]}%`;
+    if((m=text.match(/^Exporting (.+)…$/)))return `正在导出 ${m[1]}…`;
+    if((m=text.match(/^Rendering (.+)…$/)))return `正在渲染 ${m[1]}…`;
+    if((m=text.match(/^Exported (.+) \((.+)\)$/)))return `已导出 ${m[1]}（${m[2]}）`;
+    if((m=text.match(/^Download (.+\.gif)$/)))return `下载 ${m[1]}`;
+    if((m=text.match(/^GIF ready \((.+)\) — right-click image to save\.$/)))return `GIF 已就绪（${m[1]}），右键图片即可保存。`;
+    if((m=text.match(/^The narrator's last step failed:\s*(.+)$/)))return `旁白员上一步失败：${m[1]}`;
+    if((m=text.match(/^paused:\s*(quota|error)$/)))return m[1]==='quota'?'已暂停：额度不足':'已暂停：发生错误';
+    if((m=text.match(/^Coordinator\s+.\s+(\d+) of (\d+) done(?:\s+.\s+(Needs you|需要你处理))?$/)))return `协调者 ${m[1]} / ${m[2]} 已完成${m[3]?' 需要你处理':''}`;
+    if((m=text.match(/^read #(\d+)(?:\s+.\s+updated (.+))?$/)))return `已读至 #${m[1]}${m[2]?` 更新于 ${m[2]}`:''}`;
+    if((m=text.match(/^Narrator read up to #(\d+) of (\d+)$/)))return `旁白员已读至 #${m[1]} / ${m[2]}`;
+    if((m=text.match(/^Opening (.+)'s conversation needs the app\.$/)))return `打开 ${m[1]} 的会话需要在客户端中操作。`;
+    if((m=text.match(/^Copied “(.+)”\. Paste it to the coordinator and say what you want changed\.$/)))return `已复制“${m[1]}”，可粘贴给协调者说明你想修改的内容。`;
+    if((m=text.match(/^over (\d+[smhd](?:\s+\d+[smhd])?)$/)))return `跨度 ${m[1]}`;
+    return null;
+  }
+  const tw=text=>typeof globalThis.__agyToZhTw==='function'?globalThis.__agyToZhTw(text):text;
+  function translation(source, language, includeUi = false) {
+    if (language === 'en') return null;
+    if (language === 'zh-CN' || language === 'zh-TW') {
+      const value = source === 'Project' ? '项目' : nativeTranslation(source);
+      return language === 'zh-TW' && value ? tw(value) : value;
+    }
+    const pack = globalThis.__agyLocalePack;
+    if (pack?.lang !== language) return null;
+    const direct = customText(source) || (Object.hasOwn(pack.entries, source) ? pack.entries[source] : null) || (includeUi && Object.hasOwn(pack.uiEntries,source) ? pack.uiEntries[source] : null) || dynamicText(source, pack);
+    if (direct) return direct;
+    const leavingWithBase = source.match(/^(.+?)\.\s*(Leaving on [A-Za-z]+\s+\d+(?:,\s*\d{4})?\.?)$/);
+    if (leavingWithBase) {
+      const base = Object.hasOwn(pack.entries, leavingWithBase[1]) ? pack.entries[leavingWithBase[1]] : (Object.hasOwn(pack.entries, `${leavingWithBase[1]}.`) ? pack.entries[`${leavingWithBase[1]}.`] : null);
+      const tail = base ? dynamicText(leavingWithBase[2], pack) : null;
+      if (base && tail) return `${base.replace(/[.。]$/, '')}${language === 'ja' ? '。' : '. '}${tail}`;
+    }
+    return null;
+  }
+  let compiledPack, compiledPatterns;
+  function dynamicText(source, pack) {
+    if (compiledPack !== pack) {
+      compiledPatterns = pack.patterns.map(([pattern, template, flags = 'i']) => [new RegExp(pattern,flags),template]);
+      compiledPack = pack;
+    }
+    for (const [pattern, template] of compiledPatterns) {
+      const match = source.match(pattern);
+      if (match) return formatPattern(template, match, pack.lang);
+    }
+    return null;
+  }
+  const t=(text,language)=>{
+    if(language==='en')return en.get(text)||text;
+    const source = language.startsWith('zh-') ? text : en.get(text)||text;
+    const hit = translation(source,language,true);
+    if (hit) return hit;
+    return language==='zh-TW'?tw(source):source;
+  };
+  const uiText=(zh,en,language)=>language==='zh-CN'?zh:language==='zh-TW'?tw(zh):translation(en,language,true)||en;
+  function ruPlural(n, one, few, many) {
+    const abs = Math.abs(Number(n)) || 0, mod10 = abs % 10, mod100 = abs % 100;
+    return mod10 === 1 && mod100 !== 11 ? one : mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14) ? few : many;
+  }
+  function formatDuration(raw, compact = false, lang = 'fr') {
+    let out = String(raw || '').trim();
+    if (lang === 'ja') {
+      out = out
+        .replace(/(\d+)\s*(?:days?|d\b)/gi, '$1日')
+        .replace(/(\d+)\s*(?:hours?|h\b)/gi, '$1時間')
+        .replace(/(\d+)\s*(?:minutes?|m\b)/gi, '$1分')
+        .replace(/(\d+)\s*(?:seconds?|s\b)/gi, '$1秒');
+      return out.replace(/,\s*|\band\b/gi, ' ').replace(/\s+/g, compact ? '' : ' ').trim();
+    }
+    if (lang === 'ko') {
+      out = out
+        .replace(/(\d+)\s*(?:days?|d\b)/gi, '$1일')
+        .replace(/(\d+)\s*(?:hours?|h\b)/gi, '$1시간')
+        .replace(/(\d+)\s*(?:minutes?|m\b)/gi, '$1분')
+        .replace(/(\d+)\s*(?:seconds?|s\b)/gi, '$1초');
+      return out.replace(/,\s*|\band\b/gi, ' ').replace(/\s+/g, ' ').trim();
+    }
+    if (lang === 'de') {
+      out = compact
+        ? out.replace(/(\d+)\s*(?:days?|d\b)/gi, '$1 T').replace(/(\d+)\s*(?:hours?|h\b)/gi, '$1 Std.').replace(/(\d+)\s*(?:minutes?|m\b)/gi, '$1 Min.').replace(/(\d+)\s*(?:seconds?|s\b)/gi, '$1 Sek.')
+        : out.replace(/(\d+)\s*days?/gi, (_, n) => `${n} ${n === '1' ? 'Tag' : 'Tage'}`).replace(/(\d+)\s*hours?/gi, (_, n) => `${n} ${n === '1' ? 'Stunde' : 'Stunden'}`).replace(/(\d+)\s*minutes?/gi, (_, n) => `${n} ${n === '1' ? 'Minute' : 'Minuten'}`).replace(/(\d+)\s*seconds?/gi, (_, n) => `${n} ${n === '1' ? 'Sekunde' : 'Sekunden'}`).replace(/(\d+)\s*d\b/g, '$1 T').replace(/(\d+)\s*h\b/g, '$1 Std.').replace(/(\d+)\s*m\b/g, '$1 Min.').replace(/(\d+)\s*s\b/g, '$1 Sek.');
+      return out.replace(/,\s*|\band\b/gi, ' ').replace(/\s+/g, ' ').trim();
+    }
+    if (lang === 'es') {
+      out = compact
+        ? out.replace(/(\d+)\s*(?:days?|d\b)/gi, '$1d').replace(/(\d+)\s*(?:hours?|h\b)/gi, '$1h').replace(/(\d+)\s*(?:minutes?|m\b)/gi, '$1m').replace(/(\d+)\s*(?:seconds?|s\b)/gi, '$1s')
+        : out.replace(/(\d+)\s*days?/gi, (_, n) => `${n} ${n === '1' ? 'día' : 'días'}`).replace(/(\d+)\s*hours?/gi, (_, n) => `${n} ${n === '1' ? 'hora' : 'horas'}`).replace(/(\d+)\s*minutes?/gi, (_, n) => `${n} ${n === '1' ? 'minuto' : 'minutos'}`).replace(/(\d+)\s*seconds?/gi, (_, n) => `${n} ${n === '1' ? 'segundo' : 'segundos'}`).replace(/(\d+)\s*d\b/g, '$1 d').replace(/(\d+)\s*h\b/g, '$1 h').replace(/(\d+)\s*m\b/g, '$1 min').replace(/(\d+)\s*s\b/g, '$1 s');
+      return out.replace(/,\s*|\band\b/gi, ' ').replace(/\s+/g, ' ').trim();
+    }
+    if (lang === 'ru') {
+      out = compact
+        ? out.replace(/(\d+)\s*(?:days?|d\b)/gi, '$1д').replace(/(\d+)\s*(?:hours?|h\b)/gi, '$1ч').replace(/(\d+)\s*(?:minutes?|m\b)/gi, '$1м').replace(/(\d+)\s*(?:seconds?|s\b)/gi, '$1с')
+        : out.replace(/(\d+)\s*days?/gi, (_, n) => `${n} ${ruPlural(n, 'день', 'дня', 'дней')}`).replace(/(\d+)\s*hours?/gi, (_, n) => `${n} ${ruPlural(n, 'час', 'часа', 'часов')}`).replace(/(\d+)\s*minutes?/gi, (_, n) => `${n} ${ruPlural(n, 'минута', 'минуты', 'минут')}`).replace(/(\d+)\s*seconds?/gi, (_, n) => `${n} ${ruPlural(n, 'секунда', 'секунды', 'секунд')}`).replace(/(\d+)\s*d\b/g, '$1 д').replace(/(\d+)\s*h\b/g, '$1 ч').replace(/(\d+)\s*m\b/g, '$1 мин').replace(/(\d+)\s*s\b/g, '$1 с');
+      return out.replace(/,\s*|\band\b/gi, ' ').replace(/\s+/g, ' ').trim();
+    }
+    if (compact) {
+      out = out
+        .replace(/(\d+)\s*d\b/g, '$1j')
+        .replace(/(\d+)\s*h\b/g, '$1h')
+        .replace(/(\d+)\s*m\b/g, '$1m')
+        .replace(/(\d+)\s*s\b/g, '$1s')
+        .replace(/(\d+)\s*days?/gi, '$1j')
+        .replace(/(\d+)\s*hours?/gi, '$1h')
+        .replace(/(\d+)\s*minutes?/gi, '$1m')
+        .replace(/(\d+)\s*seconds?/gi, '$1s');
+    } else {
+      out = out
+        .replace(/(\d+)\s*days?/gi, (_, n) => `${n} ${n === '1' ? 'jour' : 'jours'}`)
+        .replace(/(\d+)\s*hours?/gi, (_, n) => `${n} ${n === '1' ? 'heure' : 'heures'}`)
+        .replace(/(\d+)\s*minutes?/gi, (_, n) => `${n} ${n === '1' ? 'minute' : 'minutes'}`)
+        .replace(/(\d+)\s*seconds?/gi, (_, n) => `${n} ${n === '1' ? 'seconde' : 'secondes'}`)
+        .replace(/(\d+)\s*d\b/g, '$1 j')
+        .replace(/(\d+)\s*h\b/g, '$1 h')
+        .replace(/(\d+)\s*m\b/g, '$1 min')
+        .replace(/(\d+)\s*s\b/g, '$1 s');
+    }
+    return out.replace(/,\s*|\band\b/gi, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  function formatPattern(template, match, lang = 'fr') {
+    if (typeof template === 'string') return template.replace(/\$(\d+)/g, (_, i) => match[i] || '');
+    if ('group' in template) return match[template.group] || '';
+    if (template.parts) return template.parts.map(part => formatPattern(part, match, lang)).join('');
+    if (template.equals) return formatPattern(template.equals[0], match, lang) === formatPattern(template.equals[1], match, lang);
+    if ('when' in template) return formatPattern(formatPattern(template.when, match, lang) ? template.yes : template.no, match, lang);
+    if (template.plural) return ruPlural(formatPattern(template.plural, match, lang), template.one, template.few, template.many);
+    if (template.duration) return formatDuration(formatPattern(template.duration, match, lang), template.compact, lang);
+    return formatPattern(template.replace, match, lang).replace(new RegExp('\\b' + template.word + '\\b'), template.with);
+  }
+  const terminalExcluded='[data-testid*="terminal"]:not([data-testid="overview-panel-row-terminal"]):not([data-testid="aux-pane-terminals-section"]):not([data-testid="toggle-bottom-terminal-panel"]):not([data-testid="bottom-terminal-panel-new"]):not([data-testid="bottom-terminal-panel-close"]):not([data-testid="terminal-add-button"]):not([data-testid="new-tab-card-new-terminal"])';
+  const excluded=`[data-agy-powertools-root],[data-agy-management-page],[data-testid="planner-response-text"],[data-testid="user-input-step"],[contenteditable],pre,code,kbd,samp,script,style,textarea,input,[data-markdown-root],[data-project-label],.monaco-editor,.monaco-diff-editor,.view-lines,.cm-editor,.cm-content,.xterm,.code-block,.font-mono,.shiki,.hljs,[data-testid*="diff"],[data-testid*="code-viewer"],[data-testid*="file-viewer"],[data-testid*="file-content"],[data-testid*="editor-content"],${terminalExcluded},.post-body,.post-md,#ov-frame,.raw,.raw-pre,.swarm-title`;
+  const attrExcluded=`[data-agy-powertools-root],[data-agy-management-page],[data-testid="planner-response-text"],[data-testid="user-input-step"],pre,code,kbd,samp,script,style,[data-markdown-root],[data-project-label],.monaco-editor,.monaco-diff-editor,.view-lines,.cm-editor,.cm-content,.xterm,.code-block,.font-mono,.shiki,.hljs,[data-testid*="diff"],[data-testid*="code-viewer"],[data-testid*="file-viewer"],[data-testid*="file-content"],[data-testid*="editor-content"],${terminalExcluded},.post-body,.post-md,#ov-frame,.raw,.raw-pre,.swarm-title`;
+  const menuContext='[role="menu"],[role="menuitem"],[role="menuitemradio"],[role="listbox"],label';
+  const controlContext='[role="menu"],[role="menuitem"],[role="menuitemradio"],[role="listbox"],[role="tab"],[role="radio"],button,label';
+  function tAttr(el, text, language) {
+    if (typeof text !== 'string' || !text) return text || '';
+    if (!language || language === 'en') return text;
+    if (el?.closest?.(attrExcluded)) return text;
+    const trimmed = text.trim();
+    const blockedByScope =
+      (menuOnlyLabels.has(trimmed) && !el?.closest?.(menuContext)) ||
+      (controlOnlyLabels.has(trimmed) && !el?.closest?.(controlContext));
+    if (blockedByScope) return text;
+    const hit = translation(text, language, false);
+    return hit == null ? text : hit;
+  }
+  function localizer(){
+    const originals=new Map(),attrs=new Map();let language=globalThis.__agyInitialSettings?.language||'zh-CN',disposed=false;
+    try{const saved=localStorage.getItem('agy-powertools-language');const supported=Object.keys(globalThis.__agyLanguages||{'zh-CN':1,'zh-TW':1,en:1});if(!globalThis.__agyInitialSettings?.language&&supported.includes(saved))language=saved;}catch{}
+    if(globalThis.__agyInitialSettings?.enabled===false)language='en';
+    let initialized=false,lastPruneAt=0;
+    function pruneDisconnected(force=false){
+      const now=Date.now();
+      if(!force&&now-lastPruneAt<3000)return;
+      lastPruneAt=now;
+      for(const [node]of originals)if(!node.isConnected)originals.delete(node);
+      for(const [el]of attrs)if(!el.isConnected)attrs.delete(el);
+    }
+    function textNode(node){
+      if(!node.parentElement||node.parentElement.closest(excluded))return;
+      const entry=originals.get(node),current=node.nodeValue;
+      const original=entry&&current===entry.last?entry.original:current;
+      const trimmed=original.trim(),blockedByScope=(menuOnlyLabels.has(trimmed)&&!node.parentElement.closest(menuContext))||(controlOnlyLabels.has(trimmed)&&!node.parentElement.closest(controlContext)),hit=blockedByScope?null:translation(trimmed,language);if(hit==null){if(entry&&current===entry.last&&current!==original)node.nodeValue=original;originals.delete(node);return;}
+      const target=hit;
+      const translated=language==='en'?original:original.replace(trimmed,()=>target);
+      if(current!==translated)node.nodeValue=translated;
+      originals.set(node,{original,last:translated});
+    }
+    function attributes(el){
+      if(el.closest?.(attrExcluded))return;
+      for(const name of ['placeholder','title']){
+        const key='data-agy-original-'+name;
+        const current=el.getAttribute(name);if(current==null)continue;
+        const original=el.getAttribute(key)||current;
+        const origTrimmed=original.trim(),blockedByScope=(menuOnlyLabels.has(origTrimmed)&&!el.closest?.(menuContext))||(controlOnlyLabels.has(origTrimmed)&&!el.closest?.(controlContext)),hit=blockedByScope?null:translation(original,language);
+        if(hit==null){if(el.hasAttribute(key)){if(current!==original)el.setAttribute(name,original);el.removeAttribute(key);}continue;}
+        if(!el.hasAttribute(key))el.setAttribute(key,original);
+        const translated=hit;
+        if(current!==translated)el.setAttribute(name,translated);attrs.set(el,true);
+      }
+    }
+    function scan(root){
+      if(disposed||!root)return;
+      if(root.nodeType===3){textNode(root);return;}
+      if(root.nodeType!==1&&root.nodeType!==9)return;
+      if(root.nodeType===1)attributes(root);
+      if(root.nodeType===1&&root.closest(excluded))return;
+      const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
+      while((node=walker.nextNode()))textNode(node);
+      for(const el of root.querySelectorAll?.('[placeholder],[title]')||[])attributes(el);
+    }
+    const observer=new MutationObserver(records=>{
+      let removedAny=false;
+      for(const record of records){
+        if(record.type==='characterData'){
+          const p=record.target?.parentElement;
+          if(p&&!p.closest(excluded))textNode(record.target);
+        }else if(record.type==='attributes'){
+          attributes(record.target);
+        }else{
+          if(record.removedNodes?.length)removedAny=true;
+          if(record.addedNodes?.length){
+            const target=record.target;
+            if(target?.nodeType===1&&target.closest?.(excluded))continue;
+            for(const node of record.addedNodes)scan(node);
+          }
+        }
+      }
+      if(removedAny)pruneDisconnected(false);
+    });
+    observer.observe(document,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['placeholder','title']});
+    function apply(next,persist=true){const changed=language!==next;language=next;if(changed&&persist){try{localStorage.setItem('agy-powertools-language',language);}catch{}}if(changed||!initialized){initialized=true;scan(document.body||document);}}
+    function dispose(){disposed=true;observer.disconnect();for(const [node,v]of originals)if(node.isConnected&&node.nodeValue===v.last)node.nodeValue=v.original;for(const [el]of attrs)for(const name of ['placeholder','title']){const attr='data-agy-original-'+name;if(el.hasAttribute(attr)){el.setAttribute(name,el.getAttribute(attr));el.removeAttribute(attr);}}originals.clear();attrs.clear();}
+    initialized=true;scan(document.body||document);return{apply,dispose,get language(){return language;}};
+  }
+  globalThis.__agyLocalization?.dispose();
+  globalThis.__agyI18n={t,tAttr,uiText,localizer};
+  globalThis.__agyLocalization=localizer();
+})();

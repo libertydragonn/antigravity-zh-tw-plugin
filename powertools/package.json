@@ -1,0 +1,28 @@
+{
+  "name": "agy-powertools",
+  "version": "2.16.12",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WhiteBr1ck/agy-powertools.git"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "install:local": "node scripts/install.mjs",
+    "preview:native": "node scripts/native-preview.mjs",
+    "build:calendar": "node scripts/build-calendar.mjs",
+    "uninstall:local": "node scripts/uninstall.mjs",
+    "build:release": "node scripts/build-release.mjs"
+  },
+  "dependencies": {
+    "react-day-picker": "10.0.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}
