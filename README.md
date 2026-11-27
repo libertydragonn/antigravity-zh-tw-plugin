@@ -3,8 +3,9 @@
 > 本專案是 [yunjuanyunshu114-byte/antigravity-zh-plugin](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin)（簡體中文版）的**繁體中文（臺灣用語）版**。
 > 詞典、介面提示與文件以 OpenCC `s2twp` 轉換，並針對臺灣慣用詞做了修正（例如 Agent → 代理程式、Find → 尋找、權限、帳號、進階、收件匣），轉換工具見 [`tools/s2tw_convert.py`](tools/s2tw_convert.py)。
 > 安裝流程、注入方式與簡體版完全相同，可以直接取代簡體版使用。
+> 另外內建 [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer) 的**對話上下文檢視器與 Token 用量看板**（繁體中文面板），見[下方說明](#對話上下文檢視器與-token-用量看板)。
 
-給 **Google Antigravity 桌面客戶端**（Agent Manager）裝上繁體中文介面：下載外掛包 → 解壓 → 雙擊「安裝中文化外掛.bat」。指令碼自動完成備份、注入、啟動自檢，裝完直接就是中文。
+給 **Google Antigravity 桌面客戶端**（Agent Manager）裝上繁體中文介面：下載外掛包 → 解壓 → 雙擊「安裝中文化外掛.bat」。指令碼自動完成備份、注入、啟動自檢，裝完直接就是中文，頂欄同時出現上下文與 Token 用量看板。
 
 官方客戶端自動更新後，雙擊「中文化並啟動.bat」即可自動重新中文化；也可以註冊開機自動修復，登入時自動恢復。
 
@@ -12,19 +13,21 @@
 
 | 項目 | 說明 |
 | --- | --- |
-| 當前版本 | **v1.7.0.1**（繁體中文版，基於上游 v1.7.0） |
+| 當前版本 | **v1.8.0**（繁體中文版，基於上游 v1.7.0） |
 | 上游簡體版 | [yunjuanyunshu114-byte/antigravity-zh-plugin](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin) |
+| 上下文看板 | [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer) **v0.9.3**（MIT），面板預設繁體中文 |
 | 已驗證客戶端 | Antigravity **2.35.1**、**2.35.2**（Windows 實測；macOS / Linux 提供同邏輯指令碼） |
 | 詞典規模 | 7,614 條整句詞條 + 314 條動態正則規則 |
-| 外掛包 | 約 **11 MB**，內建 Windows 免安裝 Python 執行環境 |
+| 外掛包 | 約 **12 MB**，內建 Windows 免安裝 Python 執行環境；看板使用 Antigravity 內建的 Node，不必另裝 |
 | 舊版備份（簡體，上游） | **v1.5.0**（適配 Antigravity 2.32.1）：[原始碼備份分支 `backup/v1.5.0`](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin/tree/backup/v1.5.0) · [Release 下載](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin/releases/tag/v1.5.0) |
-| 許可證 | [MIT](LICENSE) |
+| 許可證 | [MIT](LICENSE)；看板見 [`context-viewer/LICENSE`](context-viewer/LICENSE)（MIT） |
 
 ---
 
 ## 目錄
 
 - [三步快速開始](#三步快速開始)
+- [對話上下文檢視器與 Token 用量看板](#對話上下文檢視器與-token-用量看板)
 - [客戶端更新後怎麼辦](#客戶端更新後怎麼辦)
 - [命令與參數](#命令與參數)
 - [工作原理](#工作原理)
@@ -41,20 +44,20 @@
 ### 第一步：下載外掛包
 
 開啟 [Releases](https://github.com/libertydragonn/antigravity-zh-tw-plugin/releases/latest)，下載
-**`Antigravity-zh-TW-plugin-v1.7.0.1.zip`**（約 11 MB）。
+**`Antigravity-zh-TW-plugin-v1.8.0.zip`**（約 12 MB）。
 
 > 下載後可以用同一頁面提供的 `.sha256` 檔案校驗完整性，見[殺軟誤報或下載被攔截](#殺軟誤報或下載被攔截)。
 
 ### 第二步：解壓
 
-把 zip 解壓到任意位置（例如 `D:\Tools\`），得到資料夾 **`Antigravity中文化外掛-v1.7.0.1`**。
+把 zip 解壓到任意位置（例如 `D:\Tools\`），得到資料夾 **`Antigravity中文化外掛-v1.8.0`**。
 
 外掛包已內建 Python 執行環境，**不需要 git、不需要命令列、不需要自己裝 Python**。
 
 ### 第三步：雙擊「安裝中文化外掛.bat」
 
 1. 雙擊 **`安裝中文化外掛.bat`**
-2. 指令碼自動：關閉正在執行的 Antigravity → 解包 `app.asar` → 注入中文化 → 重新打包 → 啟動客戶端自檢
+2. 指令碼自動：關閉正在執行的 Antigravity → 解包 `app.asar` → 注入中文化 → 重新打包 → 寫入上下文看板 → 啟動客戶端自檢
 3. 看到中文介面即安裝成功；若自檢失敗，指令碼會自動回滾官方原版並告訴你原因（詳見[工作原理](#工作原理)）
 
 還原英文原版：雙擊 **`還原官方原版.bat`**。
@@ -62,6 +65,29 @@
 macOS / Linux 解壓後執行 `./install-macos.sh`（安裝）、`./launch-macos.sh`（更新後恢復）、`./restore-macos.sh`（還原），需系統自帶 `python3`。
 
 > 💡 **把這個外掛資料夾留在硬碟上**。客戶端每次自動更新都會覆蓋中文化，留著外掛包就能隨時一鍵恢復。
+
+---
+
+## 對話上下文檢視器與 Token 用量看板
+
+外掛包內建 [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer) v0.9.3（MIT）的看板，安裝中文化時一起裝好，面板預設為繁體中文。安裝後 Antigravity 右上角頂欄會出現一排指標，點一下即可展開面板：
+
+| 功能 | 說明 |
+| --- | --- |
+| 上下文監控 | 目前對話已用的 Token 與剩餘空間；可依模型分別設定上下文長度 |
+| 模型額度 | 頂欄圓環顯示剩餘額度；展開可看共享額度池、5 小時 / 每週額度與重置時間 |
+| 生成速度 | 輸出速度（tok/s）、首字延遲、生成耗時與本次輸出 Token |
+| 對話明細 | 提示詞、回覆、思考與工具呼叫的 Token 統計 |
+| 歷史用量 | 桌面端與 CLI 的累計 Token 用量、不同週期統計與活躍熱力圖 |
+| 費用參考 | 依已記錄用量估算 API 費用並與訂閱比較（僅供參考，不是實際扣費） |
+
+- **安裝 / 移除**：`安裝中文化外掛.bat` 預設會一起安裝看板。不想要看板就雙擊 **`移除上下文看板.bat`**（中文化保留），想裝回來雙擊 **`安裝上下文看板.bat`**。你的選擇會被記住，之後「中文化並啟動.bat」與開機自動修復都照這個選擇處理。
+- **不必另外安裝 Node.js**：看板需要 Node.js 22.4 以上；電腦裡有就用系統的 Node，沒有就用 Antigravity 本身內建的 Node 執行。
+- **安裝順序與備份**：先注入中文化、再寫入看板，最後一次冒煙測試同時驗證兩者，失敗會一起回滾。官方原版備份只保存「沒有中文化、也沒有看板」的檔案，所以「還原官方原版.bat」會把兩者一起移除。
+- **面板語言**：第一次安裝時把面板設為繁體中文；之後你在面板裡改選的語言會被保留。
+- **連線對象**：看板讀取本機對話紀錄計算用量。依程式碼中的網址，它會連線到 Google 官方 API（`cloudcode-pa.googleapis.com`，使用 Antigravity 現有的登入狀態查詢模型額度）、`models.dev` 與 GitHub（取得模型價格表、檢查看板更新）；本機 API 只監聽 `127.0.0.1`。
+- **進階選項預設關閉**：看板設定頁裡的客戶端漢化（簡體）、免 TUN 本地代理、系統提示詞檔位、上下文長度解鎖、多帳號自動切換等功能來自上游，預設全部關閉。「上下文長度解鎖」會修改 Antigravity 的 language server，「提示詞檔位」會改寫系統提示詞，開啟前請先看上游說明，風險自負。**看板自己的「客戶端漢化」請保持關閉**，以免和本外掛的繁體翻譯互相覆蓋。
+- **與上游的差異**：看板以按鈕標籤定位部分介面，上游只認英文與簡體，本外掛補上繁體標籤（傳送、麥克風、自訂、開啟 IDE 等）；未附上游未簽章的 `cli-window-helper.exe`，從看板啟動 CLI 時會改用一般命令提示字元視窗。詳見 [`context-viewer/UPSTREAM.md`](context-viewer/UPSTREAM.md)。
 
 ---
 
@@ -111,7 +137,7 @@ Antigravity 自動更新時，官方 `app.asar` 會覆蓋中文化補丁——�
 `python install.py <參數>`；外掛包內可用自帶的 `runtime\python.exe`：
 
 ```bat
-cd /d "C:\Users\<你>\Downloads\Antigravity中文化外掛-v1.7.0.1"
+cd /d "C:\Users\<你>\Downloads\Antigravity中文化外掛-v1.8.0"
 runtime\python.exe install.py --status
 ```
 
@@ -127,6 +153,9 @@ runtime\python.exe install.py --status
 | `--install-task` | 在 HKCU 登錄檔 Run 項登記登入自動修復（值名 `AntigravityZhAutoRepair`） | 客戶端經常自動更新 |
 | `--remove-task` | 刪除該登錄檔值（並清理舊方案殘留） | 不再需要自動修復 |
 | `--create-shortcut` | 在桌面建立「Antigravity 中文化版」捷徑（指向 `中文化並啟動.bat`） | 想從桌面直接啟動並自動修復 |
+| `--install-viewer` | 安裝中文化並加裝上下文看板，之後保持開啟 | 「安裝上下文看板.bat」內部使用 |
+| `--remove-viewer` | 移除看板：還原官方原版後只重新安裝中文化，之後不再安裝看板 | 「移除上下文看板.bat」內部使用 |
+| `--no-viewer` | 本次安裝不含看板（不改變記住的選擇） | 排查相容性問題 |
 | `--asar PATH` | 手動指定 `app.asar` 路徑 | 客戶端裝在非預設位置 |
 | `--version` | 列印安裝器版本 | 確認外掛包版本 |
 
@@ -197,7 +226,7 @@ try {
   "dict_sha256": "…",
   "injected_sha256": "…",
   "injected_at": "2026-11-25 09:30:00",
-  "toolkit_version": "1.7.0.1"
+  "toolkit_version": "1.8.0"
 }
 ```
 
@@ -256,7 +285,7 @@ v1.5.0 起安裝器自帶冒煙自檢：如果注入後客戶端起不來，會�
 - **下載被瀏覽器/SmartScreen 攔截**：選擇「保留」，或用 Release 頁面提供的 `.sha256` 校驗檔案：
 
   ```bat
-  certutil -hashfile "C:\Users\<你>\Downloads\Antigravity-zh-TW-plugin-v1.7.0.1.zip" SHA256
+  certutil -hashfile "C:\Users\<你>\Downloads\Antigravity-zh-TW-plugin-v1.8.0.zip" SHA256
   ```
 
   與 `.sha256` 檔案裡的值一致即可放心。
@@ -295,7 +324,7 @@ A：是。更新會覆蓋 `app.asar`。雙擊「中文化並啟動.bat」一次�
 A：可以。原始碼目錄下 `python install.py --auto-silent`（或 `--no-smoke`）只注入不啟動。
 
 **Q：外掛會收集或上傳我的資料嗎？**
-A：不會。外掛只在本機讀寫 `app.asar` 和本地詞典，不聯網、不上傳介面內容。
+A：中文化本身只在本機讀寫 `app.asar` 和本地詞典，不聯網、不上傳介面內容。上下文看板的連線對象見[看板說明](#對話上下文檢視器與-token-用量看板)；不需要看板時雙擊「移除上下文看板.bat」。
 
 **Q：怎麼自己補詞條？**
 A：編輯 `%USERPROFILE%\.antigravity-zh\zh-TW.json`（儲存後介面會自動重翻，無需重新安裝）；要進發布包則改原始碼的 `dicts/zh_tw.json`。詳見 [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md)。
@@ -347,6 +376,13 @@ A：`sudo xattr -rd com.apple.quarantine /Applications/Antigravity.app`；安裝
 ---
 
 ## 更新日誌
+
+### v1.8.0 繁體中文版（2026-11-27）
+
+- **內建對話上下文檢視器與 Token 用量看板**：整合 [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer) v0.9.3（MIT），安裝中文化時一起寫入，面板預設繁體中文；可用「移除上下文看板.bat」/「安裝上下文看板.bat」切換
+- **看板繁體相容**：在看板定位介面元素的比對處補上繁體標籤（傳送、麥克風、自訂、開啟 IDE、權限、極速），原有英文與簡體比對保留
+- **安裝器**：新增 `--install-viewer`、`--remove-viewer`、`--no-viewer`；先中文化再寫入看板、一次冒煙測試驗證兩者；官方原版備份與還原會排除含看板的檔案；沒有系統 Node 時改用 Antigravity 內建 Node
+- **實測**：Windows / Antigravity 2.35.2 安裝、移除、重新安裝看板皆通過冒煙測試，系統 Node 與 Antigravity 內建 Node 兩條路徑都驗證過
 
 ### v1.7.0.1 繁體中文版（2026-11-27）
 
@@ -426,16 +462,19 @@ python install.py --asar "D:\Portable\Antigravity\resources\app.asar"   :: 手�
 外掛包結構（解壓即用）：
 
 ```text
-Antigravity中文化外掛-v1.7.0.1/
+Antigravity中文化外掛-v1.8.0/
 ├── 安裝中文化外掛.bat          ← 雙擊這個
 ├── 還原官方原版.bat
 ├── 中文化並啟動.bat            ← 客戶端更新後雙擊這個
 ├── 建立桌面捷徑.bat
 ├── 註冊開機自動修復.bat
 ├── 取消開機自動修復.bat
+├── 安裝上下文看板.bat          ← 加裝對話上下文 / Token 用量看板
+├── 移除上下文看板.bat
 ├── install-macos.sh / launch-macos.sh / restore-macos.sh
 ├── 使用說明.txt
 ├── install.py / asar.py
+├── context-viewer/            ← 上下文看板（elviscjn-cjn/antigravity-context-viewer v0.9.3）
 ├── dicts/
 ├── docs/
 ├── tools/
@@ -452,6 +491,8 @@ antigravity-zh-tw-plugin/
 ├── 建立桌面捷徑.bat            # 建立桌面捷徑
 ├── 註冊開機自動修復.bat        # 註冊開機自動修復
 ├── 取消開機自動修復.bat        # 取消開機自動修復
+├── 安裝上下文看板.bat          # 加裝對話上下文檢視器與 Token 用量看板
+├── 移除上下文看板.bat          # 移除看板（保留中文化）
 ├── install-macos.sh          # macOS / Linux 一鍵安裝
 ├── launch-macos.sh           # macOS / Linux 中文化並啟動（更新後恢復）
 ├── restore-macos.sh          # macOS / Linux 一鍵還原
@@ -459,6 +500,7 @@ antigravity-zh-tw-plugin/
 ├── asar.py                   # 純 Python asar 解包與打包
 ├── VERSION                   # 版本號
 ├── 使用說明.txt
+├── context-viewer/            # 上下文看板（上游 v0.9.3 執行檔案 + 繁體相容修補，勿手動修改）
 ├── dicts/
 │   ├── zh_tw.json            # 整句詞典（繁體中文）
 │   └── engine.js             # DOM 翻譯引擎模板（含動態規則）
@@ -466,7 +508,9 @@ antigravity-zh-tw-plugin/
 │   ├── HOW_IT_WORKS.md       # 翻譯機制詳解（進階閱讀）
 │   └── PROMPT.md             # 專案復現提示詞（交給 AI 從零重做）
 ├── tools/
-│   └── s2tw_convert.py       # 簡體版 → 繁體版轉換工具
+│   ├── s2tw_convert.py       # 簡體版 → 繁體版轉換工具
+│   ├── vendor_context_viewer.py  # 從上游看板更新 context-viewer/ 並套用繁體相容修補
+│   └── viewer_panel_lang.js  # 安裝時把看板面板語言設為繁體中文（不覆蓋使用者的選擇）
 ├── runtime/                  # Windows 免安裝 Python 執行環境（不進 Git，Release 包內建）
 ├── README.md
 └── LICENSE                   # MIT
@@ -481,16 +525,26 @@ pip install opencc
 python tools\s2tw_convert.py "Antigravity汉化插件-vX.Y.Z" "Antigravity中文化外掛-vX.Y.Z"
 ```
 
-轉換規則（臺灣用語修正表、詞典鍵不轉換、程式碼骨架比對）寫在指令碼開頭。轉換完成後請用 `git diff` 比對，保留本版對 `install.py`（從簡體版升級時更新載入畫面提示）與 README 的手動修改。
+轉換規則（臺灣用語修正表、詞典鍵不轉換、程式碼骨架比對）寫在指令碼開頭。轉換完成後請用 `git diff` 比對，保留本版對 `install.py`（從簡體版升級時更新載入畫面提示、上下文看板整合）與 README 的手動修改。
+
+### 跟進上游看板更新
+
+```bat
+git clone https://github.com/elviscjn-cjn/antigravity-context-viewer.git ..ntigravity-context-viewer
+python toolsendor_context_viewer.py ..ntigravity-context-viewer
+```
+
+指令碼會依上游發布清單複製執行檔案到 `context-viewer/`，並套用繁體相容修補；任一修補比對次數不符就中止（代表上游程式碼已變動，需要重新檢查定位標籤）。
 
 ---
 
 ## 免責宣告
 
 本專案與 Google 及 Antigravity 官方團隊無關，不包含 Antigravity 任何二進位內容。
+內建的上下文看板來自 [elviscjn-cjn/antigravity-context-viewer](https://github.com/elviscjn-cjn/antigravity-context-viewer)（MIT，作者 ELVISCHEN 與貢獻者，授權與第三方聲明見 `context-viewer/LICENSE`、`context-viewer/THIRD_PARTY_NOTICES.md`）。
 修改 `app.asar` 可能違反官方服務條款，請自行評估使用風險。
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE)；`context-viewer/` 依其 [MIT 授權](context-viewer/LICENSE)。
 

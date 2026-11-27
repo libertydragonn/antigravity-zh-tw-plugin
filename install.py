@@ -42,7 +42,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import asar  # noqa: E402
 
-TOOLKIT_VERSION = "1.7.0.1"
+TOOLKIT_VERSION = "1.8.0"
 TAG = "Antigravity Chinese Translation Injection v5-appendonly"
 DICT_PLACEHOLDER = "__DICT_ITEMS__"
 ENGINE_START_MARKER = "(function() {\n  const dictionary = {"
@@ -68,6 +68,14 @@ BACKUP_ASAR = os.path.join(BACKUP_DIR, "app.asar.orig")
 BACKUP_META = os.path.join(BACKUP_DIR, "meta.json")
 STATE_FILE = os.path.join(USER_DIR, "state.json")
 EXT_DICT = os.path.join(USER_DIR, "zh-TW.json")
+PREFS_FILE = os.path.join(USER_DIR, "prefs.json")
+
+# 對話上下文檢視器與 Token 用量看板（elviscjn-cjn/antigravity-context-viewer，MIT）
+VIEWER_DIR = os.path.join(HERE, "context-viewer")
+VIEWER_CLI = os.path.join(VIEWER_DIR, "cli.js")
+VIEWER_LANG_JS = os.path.join(HERE, "tools", "viewer_panel_lang.js")
+VIEWER_ASAR_MARK = "dist/meter-main.js"  # 看板注入後 asar 內才會出現的檔案
+NODE_MIN_VERSION = (22, 4)
 LOG_DIR = os.path.join(USER_DIR, "logs")
 TASK_NAME = "AntigravityZhAutoRepair"
 APP_EXE_NAMES = ["Antigravity.exe"]
@@ -965,7 +973,7 @@ def load_state():
         return {}
 
 
-def save_state(app_version, dict_sha, asar_sha):
+def save_state(app_version, dict_sha, asar_sha, viewer_ok=None):
     data = {
         "app_version": app_version,
         "dict_sha256": dict_sha,
@@ -973,6 +981,9 @@ def save_state(app_version, dict_sha, asar_sha):
         "injected_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "toolkit_version": toolkit_version(),
     }
+    if viewer_ok is not None:
+        # 記錄看板結果；失敗時 --auto 不會在同一版本反覆重試
+        data["context_viewer"] = "ok" if viewer_ok else "failed"
     os.makedirs(USER_DIR, exist_ok=True)
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -1066,6 +1077,10 @@ def extract_and_prepare(asar_path):
 
 def ensure_backup(asar_path, app_version, already):
     bak = asar_path + ".bak"
+    if not already and viewer_in_asar(asar_path):
+        # 只有看板、沒有中文化的 asar 不是官方原版，不能拿來當還原基準
+        say("[!] 目前的 app.asar 已含上下文看板修改，不把它當作官方原版備份。")
+        return read_meta()
     if not already:
         if not os.path.exists(bak):
             shutil.copy2(asar_path, bak)
@@ -1118,6 +1133,125 @@ def verify_new_asar(path, tmp_dir, patched_rels, expected_unpacked=None):
         if marker not in text:
             return False, "%s 缺少注入標記 %s" % (rel, marker)
     return True, "ok"
+
+
+# ---------------------------------------------------------------- 上下文看板
+def load_prefs():
+    try:
+        with open(PREFS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def save_prefs(**kw):
+    prefs = load_prefs()
+    prefs.update(kw)
+    os.makedirs(USER_DIR, exist_ok=True)
+    with open(PREFS_FILE, "w", encoding="utf-8") as f:
+        json.dump(prefs, f, ensure_ascii=False, indent=2)
+
+
+def viewer_bundled():
+    return os.path.isfile(VIEWER_CLI)
+
+
+def want_viewer(args):
+    """外掛包內含看板、使用者沒有關閉、本次也沒有加 --no-viewer。"""
+    return (viewer_bundled() and not getattr(args, "no_viewer", False)
+            and load_prefs().get("context_viewer", True) is not False)
+
+
+def viewer_in_asar(path):
+    try:
+        # asar.list_files 回傳 (相對路徑, 大小, 是否 unpacked)
+        return any(entry[0] == VIEWER_ASAR_MARK for entry in asar.list_files(path))
+    except Exception:
+        return False
+
+
+def _node_version(cmd, env):
+    try:
+        r = subprocess.run(cmd + ["-p", "process.versions.node"], capture_output=True, text=True,
+                           encoding="utf-8", errors="ignore", timeout=90, env=env,
+                           stdin=subprocess.DEVNULL)
+        lines = (r.stdout or "").strip().splitlines()
+        v = lines[-1].strip() if (r.returncode == 0 and lines) else ""
+        return v, tuple(int(x) for x in v.split(".")[:2])
+    except Exception:
+        return "", ()
+
+
+def find_node_runtime(exe):
+    """找 Node.js 22.4+：優先系統 node，其次用 Antigravity 內建的 Electron（ELECTRON_RUN_AS_NODE）。"""
+    base_env = os.environ.copy()
+    base_env.pop("ELECTRON_RUN_AS_NODE", None)
+    candidates = []
+    forced = os.environ.get("AGZH_VIEWER_NODE", "").strip()
+    node = shutil.which("node")
+    if node and forced.lower() != "antigravity":
+        candidates.append(([node], base_env, "Node.js"))
+    electron = exe
+    if exe and exe.endswith(".app"):
+        electron = os.path.join(exe, "Contents", "MacOS", "Antigravity")
+    if electron and os.path.isfile(electron):
+        env = dict(base_env, ELECTRON_RUN_AS_NODE="1")
+        candidates.append(([electron], env, "Antigravity 內建 Node"))
+    for cmd, env, label in candidates:
+        v, parts = _node_version(cmd, env)
+        if parts and parts >= NODE_MIN_VERSION:
+            return cmd, env, "%s %s" % (label, v)
+    return None
+
+
+def _run_logged(cmd, env, cwd, timeout):
+    r = subprocess.run(cmd, cwd=cwd, env=env, capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", timeout=timeout, stdin=subprocess.DEVNULL)
+    out = ((r.stdout or "") + (r.stderr or "")).strip()
+    if _LOG_PATH:
+        try:
+            with open(_LOG_PATH, "a", encoding="utf-8") as f:
+                f.write("---- %s (exit %d)\n%s\n----\n" % (" ".join(cmd[-4:]), r.returncode, out))
+        except Exception:
+            pass
+    return r.returncode, out
+
+
+def install_viewer(asar_path, exe):
+    """在客戶端關閉時把看板寫進 app.asar（--disk-only，不碰執行中的視窗）。失敗不影響中文化。"""
+    rt = find_node_runtime(exe)
+    if not rt:
+        say("[!] 找不到 Node.js 22.4 以上的執行環境，跳過上下文看板（中文化不受影響）。")
+        return False
+    cmd, env, label = rt
+    say("[*] 安裝對話上下文檢視器與 Token 用量看板（%s）..." % label)
+    try:
+        code, out = _run_logged(cmd + [VIEWER_CLI, "install", "--path", asar_path, "--disk-only"],
+                                env, VIEWER_DIR, 900)
+    except Exception as e:
+        say("[!] 上下文看板安裝程序執行失敗（中文化不受影響）: %s" % e)
+        return False
+    if code != 0 or not viewer_in_asar(asar_path):
+        say("[!] 上下文看板安裝失敗（代碼 %d），中文化不受影響。最後幾行輸出：" % code)
+        for line in out.splitlines()[-8:]:
+            say("    " + line)
+        return False
+    if not quick_is_patched(asar_path):
+        raise RuntimeError("看板安裝後中文化補丁遺失")
+    say("[OK] 上下文看板已寫入 app.asar")
+    try:
+        code, out = _run_logged(cmd + [VIEWER_LANG_JS, "zh-TW"], env, HERE, 120)
+        last = out.strip().splitlines()[-1] if out.strip() else ""
+        if last.startswith("set:"):
+            say("[OK] 看板面板語言設為繁體中文")
+        elif last.startswith("kept:"):
+            say("[i] 保留看板面板語言設定：%s" % last[5:])
+        else:
+            say("[!] 看板面板語言設定未完成（可在看板內自行切換）: %s" % last)
+    except Exception as e:
+        say("[!] 看板面板語言設定未完成（可在看板內自行切換）: %s" % e)
+    return True
 
 
 def has_installed_app(resources_dir):
@@ -1250,6 +1384,14 @@ def cmd_install(args, launch_after=None):
         shutil.copy2(os.path.join(HERE, "dicts", "zh_tw.json"), EXT_DICT)
         say("[OK] 外部詞典已更新：%s" % EXT_DICT)
 
+        # ---- 上下文看板（在中文化之後寫入，冒煙測試會一起驗證；失敗只略過看板）----
+        viewer_ok = None
+        if want_viewer(args):
+            if offline:
+                say("[i] 離線模式不安裝上下文看板")
+            else:
+                viewer_ok = install_viewer(asar_path, exe)
+
         # ---- 冒煙測試 ----
         do_smoke = (not args.no_smoke) and sys.platform == "win32" and not offline
         if do_smoke:
@@ -1266,6 +1408,9 @@ def cmd_install(args, launch_after=None):
                         say("[i] 已重新啟動官方原版客戶端。")
                 else:
                     say("[!] 自動回滾失敗！請執行「還原官方原版.bat」。")
+                if viewer_ok:
+                    say("[i] 本次同時安裝了上下文看板。可先雙擊「移除上下文看板.bat」只安裝中文化，")
+                    say("    確認是中文化還是看板與目前的客戶端版本不相容。")
                 say("[i] 這說明當前客戶端版本與中文化補丁不相容。請把日誌發給我：")
                 say("    " + (_LOG_PATH or "(無日誌)"))
                 die("中文化未生效，已回滾，客戶端保持可用。", 3)
@@ -1295,7 +1440,7 @@ def cmd_install(args, launch_after=None):
                     say("[OK] 已回滾 app.asar")
                 die("macOS 重簽名失敗：%s" % sign_reason, 2)
 
-        save_state(app_version, dsha, sha256(asar_path))
+        save_state(app_version, dsha, sha256(asar_path), viewer_ok)
         if task_installed():
             try:
                 write_autorepair_entry()
@@ -1304,6 +1449,8 @@ def cmd_install(args, launch_after=None):
                 say("[!] 重新整理開機自動修復項失敗: %s" % e)
         say("")
         say("[DONE] 中文化完成，客戶端版本 %s。" % (app_version or "未知"))
+        if viewer_ok:
+            say("[DONE] 對話上下文檢視器與 Token 用量看板已安裝（顯示在客戶端頂欄）。")
     except SystemExit:
         raise
     except Exception as e:
@@ -1334,15 +1481,18 @@ def cmd_install(args, launch_after=None):
 
 
 # ---------------------------------------------------------------- 還原
-def cmd_restore(args):
+def cmd_restore(args, final_msg=True):
     asar_path, resources_dir = detect_paths(args.asar)
     exe = app_exe_path(resources_dir)
     cur_patched = quick_is_patched(asar_path)
+    cur_viewer = viewer_in_asar(asar_path)
     cur_version = safe_asar_version(asar_path)
     say("[*] 使用 app.asar: %s" % asar_path)
-    say("[*] 當前客戶端版本: %s，中文化狀態: %s" % (cur_version or "未知", "已注入" if cur_patched else "官方原版"))
+    say("[*] 當前客戶端版本: %s，中文化狀態: %s%s" % (
+        cur_version or "未知", "已注入" if cur_patched else "未注入",
+        "，含上下文看板" if cur_viewer else ""))
 
-    if not cur_patched:
+    if not cur_patched and not cur_viewer:
         say("[OK] 當前 app.asar 就是官方原版（未中文化），無需還原。")
         return 0
 
@@ -1350,8 +1500,8 @@ def cmd_restore(args):
     for label, path in (("安裝目錄備份", asar_path + ".bak"), ("使用者目錄備份", BACKUP_ASAR)):
         if not os.path.exists(path):
             continue
-        if quick_is_patched(path):
-            say("[!] %s 已被中文化汙染，忽略：%s" % (label, path))
+        if quick_is_patched(path) or viewer_in_asar(path):
+            say("[!] %s 不是官方原版（含中文化或看板修改），忽略：%s" % (label, path))
             continue
         candidates.append((label, path, safe_asar_version(path)))
     if not candidates:
@@ -1392,8 +1542,35 @@ def cmd_restore(args):
     except Exception:
         pass
     say("[OK] 已還原官方原版（SHA256: %s）" % sha256(asar_path))
-    say("[OK] 中文化已移除，請手動啟動 Antigravity。")
+    if final_msg:
+        say("[OK] 中文化%s已移除，請手動啟動 Antigravity。" % ("與上下文看板" if cur_viewer else ""))
     return 0
+
+
+def cmd_install_viewer(args):
+    if not viewer_bundled():
+        die("外掛包內沒有 context-viewer 資料夾，無法安裝上下文看板。")
+    save_prefs(context_viewer=True)
+    args.no_viewer = False
+    say("[*] 安裝中文化與對話上下文檢視器 / Token 用量看板 ...")
+    return cmd_install(args, launch_after=True)
+
+
+def cmd_remove_viewer(args):
+    """關閉看板偏好，用官方備份重建：還原官方原版後只重新安裝中文化。"""
+    save_prefs(context_viewer=False)
+    asar_path, _ = detect_paths(args.asar)
+    if not viewer_in_asar(asar_path):
+        say("[OK] 目前沒有安裝上下文看板；之後的中文化也不會再安裝看板。")
+        return 0
+    say("[*] 第 1 步：還原官方原版 ...")
+    cmd_restore(args, final_msg=False)
+    if viewer_in_asar(asar_path):
+        die("找不到不含看板的官方原版備份，無法移除看板。請在 Antigravity 裡執行「修復 / 重新安裝」後，"
+            "再雙擊「安裝中文化外掛.bat」。", 4)
+    say("[*] 第 2 步：重新安裝中文化（不含看板）...")
+    args.no_viewer = True
+    return cmd_install(args, launch_after=True)
 
 
 # ---------------------------------------------------------------- 狀態
@@ -1443,6 +1620,12 @@ def cmd_status(args):
     except SystemExit:
         say("詞典: 讀取失敗")
     say("開機自動修復: %s" % ("已註冊" if task_installed() else "未註冊"))
+    if viewer_bundled():
+        pref_on = load_prefs().get("context_viewer", True) is not False
+        say("上下文看板: %s（偏好：%s）" % ("已安裝" if viewer_in_asar(asar_path) else "未安裝",
+                                        "開啟" if pref_on else "關閉"))
+        rt = find_node_runtime(exe)
+        say("看板執行環境: %s" % (rt[2] if rt else "找不到 Node.js 22.4+（看板無法安裝）"))
     return 0
 
 
@@ -1564,12 +1747,19 @@ def cmd_auto(args, silent=False):
     state = load_state()
     if quick_is_patched(asar_path):
         ver = safe_asar_version(asar_path)
-        if state.get("dict_sha256") == dsha and state.get("app_version") == ver:
+        up_to_date = state.get("dict_sha256") == dsha and state.get("app_version") == ver
+        viewer_missing = (want_viewer(args) and not viewer_in_asar(asar_path)
+                          and not (state.get("context_viewer") == "failed"
+                                   and state.get("toolkit_version") == toolkit_version()))
+        if up_to_date and not viewer_missing:
             say("[OK] 當前已是最新中文化（客戶端 %s），直接啟動。" % (ver or "未知"))
             if not silent:
                 start_app(exe)
             return 0
-        say("[*] 中文化版本或詞典有更新，重新注入 ...")
+        if up_to_date:
+            say("[*] 上下文看板尚未安裝，開始安裝 ...")
+        else:
+            say("[*] 中文化版本或詞典有更新，重新注入 ...")
     else:
         say("[*] 檢測到客戶端未中文化（可能是剛自動更新過），開始注入 ...")
 
@@ -1644,6 +1834,11 @@ def main():
     ap.add_argument("--install-task", action="store_true", help="註冊登入時自動修復（HKCU 登錄檔 Run 項）")
     ap.add_argument("--remove-task", action="store_true", help="取消登入時自動修復")
     ap.add_argument("--create-shortcut", action="store_true", help="建立「Antigravity 中文化版」桌面捷徑")
+    ap.add_argument("--install-viewer", action="store_true",
+                    help="安裝（並保持開啟）對話上下文檢視器與 Token 用量看板")
+    ap.add_argument("--remove-viewer", action="store_true",
+                    help="移除上下文看板，之後只安裝中文化")
+    ap.add_argument("--no-viewer", action="store_true", help="本次安裝不含上下文看板（不改變偏好）")
     ap.add_argument("--asar", default=None, help="手動指定 app.asar 路徑")
     ap.add_argument("--version", action="store_true", help="顯示版本")
     args = ap.parse_args()
@@ -1661,6 +1856,10 @@ def main():
         sys.exit(cmd_remove_task(args))
     if args.create_shortcut:
         sys.exit(cmd_create_shortcut(args))
+    if args.install_viewer:
+        sys.exit(cmd_install_viewer(args))
+    if args.remove_viewer:
+        sys.exit(cmd_remove_viewer(args))
     if args.auto_silent:
         sys.exit(cmd_auto(args, silent=True))
     if args.auto:
