@@ -354,6 +354,7 @@ A：`sudo xattr -rd com.apple.quarantine /Applications/Antigravity.app`；安裝
 - **臺灣慣用詞修正**：Agent → 代理程式（「代理」保留給 Proxy）、權限、存取、帳號/帳戶、自訂、進階、收件匣、存放庫、終端機、尋找、背景執行、捷徑、投影片、唯讀、電腦等；中文字串裡的 “” 改為「」
 - **檔名改為繁體**：`安裝中文化外掛.bat`、`中文化並啟動.bat`、`還原官方原版.bat` 等；詞典改名為 `dicts/zh_tw.json`，外部詞典改為 `%USERPROFILE%\.antigravity-zh\zh-TW.json`
 - **從簡體版升級**：已裝過簡體版時直接執行本版安裝即可，翻譯引擎與載入畫面提示都會換成繁體；官方原版備份與簡體版共用，仍可一鍵還原
+- **同步上游 macOS 修正**（上游 PR #1，2026-11-26）：修正 `.app` 路徑識別，補上 ad-hoc 重簽名與 Electron ASAR 完整性 Fuse 檢查（Windows 行為不變）
 
 ### v1.7.0（2026-11-25）
 
