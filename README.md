@@ -12,9 +12,9 @@
 
 | 項目 | 說明 |
 | --- | --- |
-| 當前版本 | **v1.7.0**（繁體中文版） |
+| 當前版本 | **v1.7.0.1**（繁體中文版，基於上游 v1.7.0） |
 | 上游簡體版 | [yunjuanyunshu114-byte/antigravity-zh-plugin](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin) |
-| 已驗證客戶端 | Antigravity **2.35.1**（Windows 實測；macOS / Linux 提供同邏輯指令碼） |
+| 已驗證客戶端 | Antigravity **2.35.1**、**2.35.2**（Windows 實測；macOS / Linux 提供同邏輯指令碼） |
 | 詞典規模 | 7,614 條整句詞條 + 314 條動態正則規則 |
 | 外掛包 | 約 **11 MB**，內建 Windows 免安裝 Python 執行環境 |
 | 舊版備份（簡體，上游） | **v1.5.0**（適配 Antigravity 2.32.1）：[原始碼備份分支 `backup/v1.5.0`](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin/tree/backup/v1.5.0) · [Release 下載](https://github.com/yunjuanyunshu114-byte/antigravity-zh-plugin/releases/tag/v1.5.0) |
@@ -41,13 +41,13 @@
 ### 第一步：下載外掛包
 
 開啟 [Releases](https://github.com/libertydragonn/antigravity-zh-tw-plugin/releases/latest)，下載
-**`Antigravity-zh-TW-plugin-v1.7.0.zip`**（約 11 MB）。
+**`Antigravity-zh-TW-plugin-v1.7.0.1.zip`**（約 11 MB）。
 
 > 下載後可以用同一頁面提供的 `.sha256` 檔案校驗完整性，見[殺軟誤報或下載被攔截](#殺軟誤報或下載被攔截)。
 
 ### 第二步：解壓
 
-把 zip 解壓到任意位置（例如 `D:\Tools\`），得到資料夾 **`Antigravity中文化外掛-v1.7.0`**。
+把 zip 解壓到任意位置（例如 `D:\Tools\`），得到資料夾 **`Antigravity中文化外掛-v1.7.0.1`**。
 
 外掛包已內建 Python 執行環境，**不需要 git、不需要命令列、不需要自己裝 Python**。
 
@@ -111,7 +111,7 @@ Antigravity 自動更新時，官方 `app.asar` 會覆蓋中文化補丁——�
 `python install.py <參數>`；外掛包內可用自帶的 `runtime\python.exe`：
 
 ```bat
-cd /d "C:\Users\<你>\Downloads\Antigravity中文化外掛-v1.7.0"
+cd /d "C:\Users\<你>\Downloads\Antigravity中文化外掛-v1.7.0.1"
 runtime\python.exe install.py --status
 ```
 
@@ -197,7 +197,7 @@ try {
   "dict_sha256": "…",
   "injected_sha256": "…",
   "injected_at": "2026-11-25 09:30:00",
-  "toolkit_version": "1.7.0"
+  "toolkit_version": "1.7.0.1"
 }
 ```
 
@@ -256,7 +256,7 @@ v1.5.0 起安裝器自帶冒煙自檢：如果注入後客戶端起不來，會�
 - **下載被瀏覽器/SmartScreen 攔截**：選擇「保留」，或用 Release 頁面提供的 `.sha256` 校驗檔案：
 
   ```bat
-  certutil -hashfile "C:\Users\<你>\Downloads\Antigravity-zh-TW-plugin-v1.7.0.zip" SHA256
+  certutil -hashfile "C:\Users\<你>\Downloads\Antigravity-zh-TW-plugin-v1.7.0.1.zip" SHA256
   ```
 
   與 `.sha256` 檔案裡的值一致即可放心。
@@ -348,13 +348,18 @@ A：`sudo xattr -rd com.apple.quarantine /Applications/Antigravity.app`；安裝
 
 ## 更新日誌
 
+### v1.7.0.1 繁體中文版（2026-11-27）
+
+- **同步上游 macOS 修正**（上游 PR #1，2026-11-26）：修正 `.app` 路徑識別，補上 ad-hoc 重簽名與 Electron ASAR 完整性 Fuse 檢查（Windows 行為不變）
+- **修正誤轉**：表示「通過（pass）」的「校驗通過」「未通過」等不再被轉成「透過」
+- **實測**：Windows / Antigravity 2.35.2 安裝成功，冒煙測試通過，介面為繁體中文
+
 ### v1.7.0 繁體中文版（2026-11-27）
 
 - **簡體 → 繁體（臺灣用語）**：以上游 v1.7.0 為基礎，用 OpenCC `s2twp` 轉換全部 7,614 條詞典譯文、314 條動態規則、安裝器提示、批次檔與文件；詞典的「鍵」（客戶端英文原文）保持不變
 - **臺灣慣用詞修正**：Agent → 代理程式（「代理」保留給 Proxy）、權限、存取、帳號/帳戶、自訂、進階、收件匣、存放庫、終端機、尋找、背景執行、捷徑、投影片、唯讀、電腦等；中文字串裡的 “” 改為「」
 - **檔名改為繁體**：`安裝中文化外掛.bat`、`中文化並啟動.bat`、`還原官方原版.bat` 等；詞典改名為 `dicts/zh_tw.json`，外部詞典改為 `%USERPROFILE%\.antigravity-zh\zh-TW.json`
 - **從簡體版升級**：已裝過簡體版時直接執行本版安裝即可，翻譯引擎與載入畫面提示都會換成繁體；官方原版備份與簡體版共用，仍可一鍵還原
-- **同步上游 macOS 修正**（上游 PR #1，2026-11-26）：修正 `.app` 路徑識別，補上 ad-hoc 重簽名與 Electron ASAR 完整性 Fuse 檢查（Windows 行為不變）
 
 ### v1.7.0（2026-11-25）
 
@@ -421,7 +426,7 @@ python install.py --asar "D:\Portable\Antigravity\resources\app.asar"   :: 手�
 外掛包結構（解壓即用）：
 
 ```text
-Antigravity中文化外掛-v1.7.0/
+Antigravity中文化外掛-v1.7.0.1/
 ├── 安裝中文化外掛.bat          ← 雙擊這個
 ├── 還原官方原版.bat
 ├── 中文化並啟動.bat            ← 客戶端更新後雙擊這個

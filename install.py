@@ -42,7 +42,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import asar  # noqa: E402
 
-TOOLKIT_VERSION = "1.7.0"
+TOOLKIT_VERSION = "1.7.0.1"
 TAG = "Antigravity Chinese Translation Injection v5-appendonly"
 DICT_PLACEHOLDER = "__DICT_ITEMS__"
 ENGINE_START_MARKER = "(function() {\n  const dictionary = {"
